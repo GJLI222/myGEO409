@@ -87,6 +87,27 @@
         javaTalk("Hello map.");
         javaTalk("Why are we talking to a map.");
         javaTalk("Go back in backpack!");
+        function javaMath(width, height, depth) {
+            var area="width+ height+ depth";
+            var volume= 30;
+            return [area, volume];
+        };
+        var values= javaMath();
+        console.log(values[0]);
+        console.log(values[1]);
+        javaName()
+        function javaName() {
+            var power= "sword"
+            console.log(power)
+        };
+      
+        function outerMind(message) {
+            var innerMind= function (message) {
+                console.log(message)
+            } 
+            innerMind("those that hurt");
+        }
+        outerMind("all those that are free");
     </script>
     
 </body>
