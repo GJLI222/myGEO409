@@ -96,21 +96,21 @@
             var cityCoords = [
                 [38.0297, -84.4947],
                 [38.988403, -84.601987],
-                [38.201809, -84.873827],               
+                [38.201809, -84.873827]               
             ];
             var cityPops = [308428, 8478, 27453]; 
             
             var cityAreas = [lexArea, elmArea, frankArea];
                     
             mapCities(cities, cityCoords, cityAreas, cityPops); 
-        };
+        }
             
         function mapCities(cities, cityCoords, cityAreas, cityPops) {             
             var units = 'miles';
             
             for(var i = 0; i < cities.length; i++) {
 
-                var density =  calcPopDensity(cityPops, cityAreas, units);
+                var density =  calcPopDensity(cityPops [i], cityAreas[i], units);
                 return ("density")
 
                 var popup = "<b>"+cities[i]+"</b><br>"
@@ -119,22 +119,14 @@
                 L.marker(cityCoords[i]).addTo(map)
                     .bindPopup(popup);
              }
-        };
+        }
         function calcPopDensity( population, area, units) {
             if (units== "miles"){
-                var units="miles"
-                var density= population*area
-            }else{
-                    var units="km"
-                    var density=population*area*1.609*1.609
+                return population/area;
+            }else if(units=="km"){
+                return population/(area*1.60934*1.60934)    
+            }
         };
-        calcPopDensity(cityPops, cityAreas, miles);
-            
-        // write a function named calcPopDensity which accepts three arguments from the caller, the  
-        // population and the area of a single city, and units. The function should calculate the density
-        // of the city with these two values and return the result to the caller 
-        
-
         // end writing/editing Task E code here
           
     </script>
