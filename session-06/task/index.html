@@ -95,16 +95,15 @@
         
         function prepareData(lexArea) { /* include 2 more parameters here */
             
-            var cities = ["Lexington"]; /* include 2nd and 3rd city names */
+                var cities = ["Lexington", "Elsmere", "Frankfort"]; /* include 2nd and 3rd city names */
             var cityCoords = [
                 [38.0297, -84.4947] 
-                /* include 2nd city lat/lon here */
-                /* include 3rd city lat/lon here */
-                
+                [38.988403, -84.601987]
+                [38.201809, -84.873827]                
             ];
-            var cityPops = [308428]; /* include 2nd and 3rd city pops here */
+            var cityPops = [308428, 8478, 27453]; 
             
-            var cityAreas = [lexArea]; /* include 2nd and 3rd city areas */
+            var cityAreas = [lexArea, elmArea, frankArea];
                     
             mapCities(cities, cityCoords); // modify function call to pass 2 additional
                                            // arguments
