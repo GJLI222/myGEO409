@@ -120,13 +120,19 @@
                     .bindPopup(popup);
              }
         };
-        function calcPopDensity( pop, area) {
-            var density= pop*area
+        function calcPopDensity( population, area, mapCities(cities, cityCoords, cityAreas, cityPops) {             
+            var units = 'miles';}) {
+            if (units= "miles"){
+                var units="miles"
+                var density= population*area
+            }else{
+                    var units="km"
+                    var density=population*area*1.609*1.609
         };
-        calcPopDensity(cityPops [0], cityAreas [0]);
+        calcPopDensity(cityPops, cityAreas, miles);
             
-        // write a function named calcPopDensity which accepts two arguments from the caller, the  
-        // population and the area of a single city. The function should calculate the density
+        // write a function named calcPopDensity which accepts three arguments from the caller, the  
+        // population and the area of a single city, and units. The function should calculate the density
         // of the city with these two values and return the result to the caller 
         
 
