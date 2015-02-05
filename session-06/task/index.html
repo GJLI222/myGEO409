@@ -110,16 +110,15 @@
             
             for(var i = 0; i < cities.length; i++) {
 
-                var density =  calcPopDensity(cityPops [i], cityAreas[i], units);
-                return ("density")
-
+                var density =  calcPopDensity(cityPops[i], cityAreas[i], units);
+                
                 var popup = "<b>"+cities[i]+"</b><br>"
-                                +"<b>Density</b>: "+density.toLocaleString()+" people per sq " + units;
+                                +"<b>Density</b>: "+density.toLocaleString()+" people                                   per sq " + units;
 
                 L.marker(cityCoords[i]).addTo(map)
                     .bindPopup(popup);
-             }
         }
+     }
         function calcPopDensity( population, area, units) {
             if (units== "miles"){
                 return population/area;
