@@ -81,7 +81,23 @@
         map.addLayer(tiles);
         
         // continue JavaScript coding here!
-        
+        var myArmor={
+            length: 42,
+            weapon: "katana",
+            style: "Santoryou",
+            price: 300+" dollars",
+            points: 10,
+            armor: {
+                torso:"chain"+" leather",
+                feet: 2+" boots",
+                pants:10,
+                shirt: true
+            }
+        };
+        console.log(myArmor.price);
+        console.log(myArmor.armor.shirt);
+        myArmor.armor.shirt=false;
+        console.log(myArmor.armor.shirt);
         
     </script>
     
