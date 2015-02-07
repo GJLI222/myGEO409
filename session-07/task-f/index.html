@@ -119,10 +119,10 @@
             }
         ];
         for (var i=0; i<cities.length; i++){
-            console.log(cities[i].properties)
+            var props=cities[i].properties;
+            var popup="I am a temporary string value";
+            L.marker(props.coordinates).addTo(map).bindPopup(popup);
         }
-        var props=cities[i].properties;
-        console.log(props)
         // End code for Task F
         
           
