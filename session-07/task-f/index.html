@@ -118,21 +118,29 @@
                 }
             }
         ];
+       
         for (var i=0; i<cities.length; i++){
             var props=cities[i].properties;
-            var popup="I am a temporary string value";
-            L.marker(props.coordinates).addTo(map).bindPopup(popup);
-            buildPopup(cities[i], props.population, props.state)
+            var popup="temporary value";
+            var popup= buildPopup(cities[i].name, props.population, props.state);
+            L.marker(props.coordinates).addTo(map)
+                .bindPopup(popup);
+           
         };
+        
+        
         function buildPopup(name, pop, state){
             if(state=="KY"){
-                return colorClass="blue"
+                var colorClass="blue";
             }else if(state=="IN"){
-                return colorClass="red"
-            }else if(state=="OH"){
-                              return colorClass= "green"
-                     }
-             return  "<div class='"+colorClass+"'><b>"+name+"</b><br>"+ "<b>Population</b>: "+pop.toLocaleString()+"<div>";
+                var colorClass="red";
+            }else if(state=="OH"){ 
+                var colorClass= "purple";
+            }
+            console.log (name);
+          
+            return  "<div class='"+colorClass+"'><b>"+name+"</b><br>"+
+            "<b>Population</b>: "+pop.toLocaleString()+"<div>";
         }
         
         // End code for Task F
