@@ -67,6 +67,10 @@
         var map;
         var targetDiv = 'map';
 
+        var mapCenter=L.latLng (30.0489, -96.5025); 
+        var otherCity=( 38.1489, -96.5125)
+        var distance= mapCenter.distanceTo.otherCity;
+        console.log(distance);
         var options = {
             center: [38.0489,-84.5025],
             zoom: 13
@@ -77,6 +81,8 @@
             subdomains: '0123',
             minZoom: 2,
             maxZoom: 18
+            dragging: false
+            zoomControl: false
         });
         map.addLayer(tiles);
         
