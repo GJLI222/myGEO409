@@ -77,16 +77,16 @@
 	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
 });                         
     map.addLayer(Esri_WorldImagery);
-        var redIguana = L.latLng(40.7718,-111.9124);
+        var redIguana = L.latlng(40.7718,-111.9124);
         
     map.on('click', function(e){
-        var location=(e.latLng);
+        var location=e.latlng;
+        map.setView(location,4);
         var distance= location.distanceTo(redIguana);
-        console.log (distance);
+        console.log ("You clicked", distance, "meters from Red Iguana.");
         var bounds=map.getBounds();
         var swcorner=bounds.getSouthWest();
-        console.log(swcorner.lat, swcorner.lng);
-        console.log (e.latLng);
+        console.log(location.distanceTo(redIguana));
     });
         
    
