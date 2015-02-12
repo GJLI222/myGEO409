@@ -73,21 +73,23 @@
         minZoom: 4,
         maxZoom: 12,        
     });
-                
-    var redIguana = L.latLng(40.7718,-111.9124);
+     var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+});                         
+    map.addLayer(Esri_WorldImagery);
+        var redIguana = L.latLng(40.7718,-111.9124);
         
     map.on('click', function(e){
-        console.log (e.latLng)
+        var location=(e.latLng);
+        var distance= location.distanceTo(redIguana);
+        console.log (distance);
+        var bounds=map.getBounds();
+        var swcorner=bounds.getSouthWest();
+        console.log(swcorner.lat, swcorner.lng);
+        console.log (e.latLng);
     });
-        /*var latLng=function(e)
-        var distance= latLng.distanceTo(redIguana)
-        console.log (distance)
-        var latLng=function(e)
-        var distance= latLng.distanceTo(redIguana)
-        console.log (distance)*/
-    var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-});              
+        
+   
     </script>
     
 </body>
