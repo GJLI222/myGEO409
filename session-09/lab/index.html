@@ -100,16 +100,16 @@
         redIguanaMarker.addTo(map);*/
         
 // ------------
-        
-        var redIguanaLocation = L.latLng(40.7718,-111.9124);
-        var redIguanaMarker = L.marker(redIguanaLocation, {
-            draggable: true   
-        });
-        redIguanaMarker.addTo(map);
-        redIguanaMarker.on('drag', function(e) {
-            console.log(e.target.getLatLng());
-        });
-        
+//        
+//        var redIguanaLocation = L.latLng(40.7718,-111.9124);
+//        var redIguanaMarker = L.marker(redIguanaLocation, {
+//            draggable: true   
+//        });
+//        redIguanaMarker.addTo(map);
+//        redIguanaMarker.on('drag', function(e) {
+//            console.log(e.target.getLatLng());
+//        });
+//        
 // ------------- POPUP
         
 //        var redIguanaLocation = L.latLng(40.7718,-111.9124);
@@ -119,9 +119,9 @@
 
 // ----------
         
-//        var redIguanaLocation = L.latLng(40.7718,-111.9124);
-//        var redIguanaCircle = L.circle(redIguanaLocation, 400);
-//        redIguanaCircle.addTo(map);
+        var redIguanaLocation = L.latLng(40.7718,-111.9124);
+        var redIguanaCircle = L.circle(redIguanaLocation, 600);
+        redIguanaCircle.addTo(map);
 
 // ----------
         
