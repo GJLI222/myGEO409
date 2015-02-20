@@ -50,7 +50,7 @@
 
 <body>
     <header>
-        <h1>Kentucky</h1>
+        <h1>Australia</h1>
         <h2>Lizard Lands</h2>
     </header>
 
@@ -165,6 +165,15 @@
         
         
 //      steps 3 here
+       var reddeath= L.circle (iguanaZones, 2200,{ 
+        color: "#0D0000",
+        fillColor: "#fa0606"
+        });
+        reddeath.addTo(map);
+        var greenwall= L.circle (iguanaZones,{ 
+            color: "#30b22a"
+        });
+        greenwall.addTo(map);
 //      steps 4-6  here
             
         var marker;  // keep this code
