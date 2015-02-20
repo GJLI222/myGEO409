@@ -175,6 +175,7 @@
         greenwall.addTo(map);
 //      steps 4-6  here
         var domains= L.layerGroup ().addTo(map);
+        /*for domains ();*/
         reddeath.addTo(domains);
         greenwall.addTo(domains);
         var marker;  // keep this code
@@ -193,7 +194,7 @@
         
         function testDistance() {
             
-            iguanaGroup.eachLayer(function(layer) {
+            domains.eachLayer(function(layer) {
 //              step 9 here
 //              step 10 here
             });
