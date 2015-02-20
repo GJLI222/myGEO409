@@ -166,8 +166,7 @@
         
 //      steps 3 here
        var reddeath= L.circle (iguanaZones, 2200,{ 
-        color: "#0D0000",
-        fillColor: "#fa0606"
+            color: "#f20808"
         });
         reddeath.addTo(map);
         var greenwall= L.circle (iguanaZones,{ 
@@ -175,7 +174,9 @@
         });
         greenwall.addTo(map);
 //      steps 4-6  here
-            
+        var domains= L.layerGroup ().addTo(map);
+        reddeath.addTo(domains);
+        greenwall.addTo(domains);
         var marker;  // keep this code
        
         map.on('click', function(e) {  // keep this code
