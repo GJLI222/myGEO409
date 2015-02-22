@@ -60,8 +60,8 @@
         
 // steps and 11 and 12 below        
         <p>Map authored by Grant List</p>
-        <p>Additional information about the data and map goes here.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis urna magna, maximus nec laoreet sit amet, dictum ultricies nibh. Ut id auctor lacus. Nam a dolor et justo luctus luctus. Duis a elit eget risus dictum vehicula id eu elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed sed enim nisl. Vestibulum commodo imperdiet lacus, sed facilisis erat placerat sit amet. Nulla consequat malesuada neque eget aliquet. Integer non convallis nisl, gravida ultrices ex. Fusce nec vestibulum elit. Sed elementum lectus ipsum, vulputate elementum ex laoreet a. Aenean eu ex varius, varius felis vitae, efficitur nulla. Quisque pretium laoreet ante, in sodales dui vehicula at. Mauris eu sem sapien.
+        <p>Iguana Invasion Plan</p>
+        <p>A new threat has come upon Melbourne, Australia. Giant iguanas have landed and set up battle camps around the are. Due to intensive scouting excursions the National Defense has produced the locations of the invaders. This map was created to help refugees escape the onslaught. By clicking on the map users will be able to chart a path through the camps in safety.  
         </p>
     </footer>
 
@@ -69,8 +69,8 @@
 
  // Step 1 and 2 here
         var map= L.map("map", {
-            center: [-37.81, 144.96],
-            zoom: 10,
+            center: [-37.77, 144.5],
+            zoom: 13,
         });
              var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
 	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
@@ -165,38 +165,52 @@
         
         
 //      steps 3 here
-       var reddeath= L.circle (iguanaZones, 2200,{ 
+       var reddeath= L.circle (iguanaZones.coordinates, 2200, { 
             color: "#f20808"
-        });
-        reddeath.addTo(map);
-        var greenwall= L.circle (iguanaZones,{ 
+       });
+        var greenwall= L.circle (iguanaZones.coordinates, iguanaZones.size, { 
             color: "#30b22a"
         });
-        greenwall.addTo(map);
 //      steps 4-6  here
-        var domains= L.layerGroup ().addTo(map);
-        /*for domains ();*/
+        var domains= L.layerGroup ();
         reddeath.addTo(domains);
         greenwall.addTo(domains);
-        var marker;  // keep this code
+        for (var coordinates in iguanaZones){
+           
+        };
+        domains.addTo(map);
+        var marker=L.marker(iguanaZones.coordinates, {
+            opacity: .8,
+            clickable: true
+        });  // keep this code
        
-        map.on('click', function(e) {  // keep this code
-
+        map.on('click', function(e) { // keep this code
+            
 // uncomment this code after step seven is finished          
 //            if(map.hasLayer(marker)) {               
 //                map.removeLayer(marker);
 //            }
 
-//              step seven here            
+//              step seven here 
+            marker.addTo(map);
 //              step eight here
-            
+            return testDistance(location)
         });  // keep this code
         
         function testDistance() {
             
             domains.eachLayer(function(layer) {
 //              step 9 here
+                reddeath.getRadius(iguanaZones);
+                greenwall.getRadius(iguanaZones);
 //              step 10 here
+                layer.on ("marker", function(e) {
+                          if (testDistance>2200){
+                            domains==greenwall
+                        }else {
+                            domains==reddeath
+                    }
+                });
             });
         }
         
