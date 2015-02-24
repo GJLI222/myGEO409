@@ -200,8 +200,8 @@
             
             domains.eachLayer(function(layer) {
 //              step 9 here
-                var pathbounds=greenwall.getRadius();
-                testDistance(pathbounds);
+                var plan=greenwall.getRadius(marker);
+                testDistance(plan);
 //              step 10 here
                 layer.on ("marker", function(e) {
                           if (testDistance>2200){
