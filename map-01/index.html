@@ -200,13 +200,13 @@
             
             domains.eachLayer(function(greenwall) {
 //              step 9 here
-                var moveloc=markerloc.distanceTo(greenwall.getLatLng());
-                distance=moveloc-greenwall.getRadius();
+                var moveloc=markerloc.distanceTo(layer.getLatLng());
+                distance=moveloc-layer.getRadius();
 //              step 10 here
                 if (distance<2200){
-                            greenwall.setStyle(redcircle);
+                            layer.setStyle(redcircle);
                     }else {
-                            greenwall.setStyle(greencircle);
+                            layer.setStyle(greencircle);
                     }
             });
         }
