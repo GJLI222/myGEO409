@@ -69,8 +69,8 @@
 
  // Step 1 and 2 here
         var map= L.map("map", {
-            center: [-37.77, 144.5],
-            zoom: 13,
+            center: [-37.8163, 144.9631],
+            zoom: 11,
         });
              var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
 	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
@@ -165,50 +165,48 @@
         
         
 //      steps 3 here
-       var reddeath= L.circle (iguanaZones.coordinates, 2200, { 
+        var redcircle= { 
             color: "#f20808"
-       });
-        var greenwall= L.circle (iguanaZones.coordinates, iguanaZones.size, { 
+       };
+        var greencircle= { 
             color: "#30b22a"
-        });
+        };         
 //      steps 4-6  here
         var domains= L.layerGroup ();
-        reddeath.addTo(domains);
-        greenwall.addTo(domains);
-        for (var coordinates in iguanaZones){
-           
+        for (var i=0; i<iguanaZones.length;i++){
+           var greenwall=L.circle(iguanaZones[i].coordinates, iguanaZones[i].properties.size, greencircle)
+            greenwall.addTo(domains);
         };
         domains.addTo(map);
-        var marker=L.marker(iguanaZones.coordinates, {
-            opacity: .8,
-            clickable: true
-        });  // keep this code
+        
+        var marker;  // keep this code
        
         map.on('click', function(e) { // keep this code
             
 // uncomment this code after step seven is finished          
-//            if(map.hasLayer(marker)) {               
-//                map.removeLayer(marker);
-//            }
+            if(map.hasLayer(marker)) {               
+                map.removeLayer(marker);
+            }
 
 //              step seven here 
+            var markerloc=e.latlng;
+            var marker=L.marker(markerloc);
             marker.addTo(map);
 //              step eight here
-            return testDistance(location)
+            return testDistance(markerloc)
         });  // keep this code
         
         function testDistance() {
             
             domains.eachLayer(function(layer) {
 //              step 9 here
-                reddeath.getRadius(iguanaZones);
                 greenwall.getRadius(iguanaZones);
 //              step 10 here
                 layer.on ("marker", function(e) {
                           if (testDistance>2200){
-                            domains==greenwall
+                            domains==greencircle
                         }else {
-                            domains==reddeath
+                            domains==redcircle
                     }
                 });
             });
