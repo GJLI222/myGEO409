@@ -190,26 +190,24 @@
 
 //              step seven here 
             var markerloc=e.latlng;
-            var marker=L.marker(markerloc);
+            marker=L.marker(markerloc);
             marker.addTo(map);
 //              step eight here
             return testDistance(markerloc)
         });  // keep this code
         
-        function testDistance() {
+        function testDistance(markerloc) {
             
-            domains.eachLayer(function(layer) {
+            domains.eachLayer(function(greenwall) {
 //              step 9 here
-                var plan=greenwall.getRadius(marker);
-                testDistance(plan);
+                var moveloc=markerloc.distanceTo(greenwall.getLatLng());
+                distance=moveloc-greenwall.getRadius();
 //              step 10 here
-                layer.on ("marker", function(e) {
-                          if (testDistance>2200){
-                            greenwall==greencircle
-                        }else {
-                            greenwall==redcircle
+                if (distance<2200){
+                            greenwall.setStyle(redcircle);
+                    }else {
+                            greenwall.setStyle(greencircle);
                     }
-                });
             });
         }
         
