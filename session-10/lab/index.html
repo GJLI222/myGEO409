@@ -94,7 +94,13 @@
         ]
       }
     };
-        var geomarkerLeaflet=L.geoJson(geomarker).addTo(map);
+        var geomarkerLeaflet=L.geoJson(geomarker, {
+            poinToLayer: function(f,ll) {
+                console.log(f,ll);
+                return L.circle(ll,40000);
+                console.log(f,ll);
+            }
+        }).addTo(map);
     </script>
     
 </body>
