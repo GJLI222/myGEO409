@@ -78,15 +78,15 @@
     <script>
 
         var map = L.map('map', {
-            center: [38.96,-85.36],
-            zoom: 8,
+            center: [39.04,-84.6],
+            zoom: 13,
         });
        
         var tiles = L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-hillshading/{z}/{x}/{y}.png', {
             attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
             subdomains: '0123',
             minZoom: 4,
-            maxZoom: 12
+            maxZoom: 20
         });
         map.addLayer(tiles);
         
@@ -97,7 +97,9 @@
   "features": [
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        name: "House"
+      },
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -108,7 +110,9 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        name: "School"
+      },
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -119,7 +123,9 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        name: "Church"
+    },
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -130,7 +136,9 @@
     },
     {
       "type": "Feature",
-      "properties":{},
+      "properties":{
+        name: "Park"
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -386,16 +394,44 @@
     }
   ]
 };
-        var mapdataLeaflet=L.geojson(mapdata).addTo(map);
-        var mapdataLeaflet=L.geoJson(mapdata, pointToLayer:function(feature, latlng){
-                    return L.circle(latlng, 200);
-            });
-        var mapdataLeaflet=L.geoJson(mapdata, onEachFeature(){
-                                     
-                    });
-        mapdataLeaflet.L.circle.setStyle();
-        mapdata.features.polygon.setStyle();
-        mapdata.features.LineString.setStyle();
+        
+        var mapdataLeaflet=L.geoJson(mapdata, {
+                pointToLayer:function(feature, latlng){
+                    return L.circle(latlng, 20);
+                 },
+                  style: function(feature){
+                      return{   dashArray: "5,10",
+                                weight:2
+                            }
+                  },
+                onEachFeature: function(feature,layer){
+                   if(feature.geometry.type=="Point"){
+                       layer.setStyle({color: "red"});
+                       layer.bindPopup(feature.properties.name);
+                    }
+                    if(feature.geometry.type=="LineString"){
+                        layer.setStyle({color: "blue"});
+                    }
+                   if(feature.geometry.type=="Polygon"){
+                        layer.setStyle({color: "green"});
+                        layer.bindPopup(feature.properties.name);
+                    };
+                },
+                
+        }).addTo(map);
+        
+//        var mapdataLeaflet=L.geoJson(mapdata, onEachFeature(){
+//                                     
+//                });
+//        mapdataLeaflet.L.circle.setStyle(
+//        
+//            );
+//        mapdata.features.polygon.setStyle(
+//        
+//            );
+//        mapdata.features.LineString.setStyle(
+//        
+//            );
           
     </script>
     
