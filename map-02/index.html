@@ -51,18 +51,76 @@
 
 <body>
     <header>
-        <!-- add HTML here-->
+        <h1>Lexington: Aldariath Outpost</h1>
+        <h2>Home of Graven Magor</h2>
     </header>
-
-        <!-- add HTML here-->
+    
+    <div id='map'></div>
 
     <footer>
-        <!-- add HTML here-->
+       <p> Map authored by Grant List</p>
+        
     </footer>
         
-        <!-- load external JS file here-->
+    <script src="power-plants-assignment.js"> </script>    <!-- load external JS file here-->
     <script>
-
+    var map=L.map ( {
+        center: [39,-89.6],
+        zoom: 10,
+        minZoom: 4,
+        maxZoom: 20,        
+    });
+    var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    });                         
+    map.addLayer(Esri_WorldImagery);
+        var home= L.latLng(39,-89.6);
+    plants.features.sort(function(a,b) {
+			return b.properties.capacity_mw - a.properties.capacity_mw;
+		});
+        var distance=home.distanceTo(feature.geometry.type.coordinates)
+        L.geoJson (plants, {
+            pointToLayer: function(feature,latlng){
+                return L.circleMarker(latlng, {
+                    fillcolor: "red",
+                    fillOpacity: 0.6,
+                    getRadius(feature.properties.capacity_mw),
+                });
+             },
+            filter: function(feature,layer){
+                
+                distanceTo([39,-89.6], )
+                if (feature.properties.fuel_source["Coal"]){
+                    if (feature.properties.capacity_mw <= 300){
+                        if (distance <= 400) {
+                        return feature;
+                        }
+                    }
+                }
+            },
+            onEachFeature: function(feature,layer) {
+                  var props = feature.properties;
+                var content = "<b>"+props.plant_name+"</b><br>"+
+                    props.capacity_mw.toLocaleString()+" MW<br>";
+                var source = props.fuel_source;
+                for(var fuel in source){
+                    content+="<b>"+fuel+"</b>: "+source[fuel].toLocaleString()+" MW<br>";
+                }
+                layer.bindPopup(content); 
+                
+                layer.on('mouseover', function() {
+                    layer.setStyle({
+                        fillColor: 'black'
+                    });
+                });
+                layer.on('mouseout', function() {
+                    layer.setStyle({
+                        fillColor: 'red'
+                    });
+                });
+            }
+        }).addTo(map);
+        
           // add JavaScript here
         
     </script>
