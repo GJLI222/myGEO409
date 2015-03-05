@@ -61,7 +61,7 @@
        <p> Map authored by Grant List</p>
         
     </footer>
-        
+        <p> This map was created in response to a need to find local power stateing. This map will show the user the name, loction, and distance from the city of Elsmere Kentucky of all coal power plants operating within 400 meters. </p>
     <script src="power-plants-assignment.js"> </script>    <!-- load external JS file here-->
     <script>
     var map=L.map ("map", {
@@ -80,6 +80,7 @@
 			return b.properties.capacity - a.properties.capacity;
 		});
         //var plantLoc=plants.geometry.coordinates;
+        
         L.geoJson (plants, {
             pointToLayer: function(feature,latlng) {
                 return L.circleMarker(latlng, {
