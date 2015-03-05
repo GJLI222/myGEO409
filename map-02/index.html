@@ -77,32 +77,32 @@
      
     var home= L.latLng(39.0014,-84.60013);
     plants.features.sort(function(a,b) {
-			return b.properties.capacity - a.properties.capacity;
+			//return b.properties.capacity - a.properties.capacity;
 		});
-        //var plantLoc=plants.geometry.coordinates
+        //var plantLoc=plants.geometry.coordinates;
         L.geoJson (plants, {
             pointToLayer: function(feature,latlng) {
                 return L.circleMarker(latlng, {
+                    color: "red",
                     fillColor: "red",
                     fillOpacity: 0.6,
                     //radius: getRadius(feature.properties.capacity),
                 });
              },
+            //var distance= distanceTo(home, plantLoc),
             filter: function(feature,layer){
-                
-                //var distance= distanceTo(home, plantLoc)
                 if (feature.properties.source["Coal"]){
-                    //if (feature.properties.capacity <= 500){
-                        //if (distance < 400) {
+                    if (feature.properties.capacity <= 500){
+                        //if (distance <= 500) {
                         return feature;
                         //}
-                    //}
+                    }
                 }
             },
             onEachFeature: function(feature,layer) {
                 var props = feature.properties;
                 var content = "<b>"+props.plant_name+"</b><br>"+
-                    props.capacity.toLocaleString()+" MW<br>";
+                    props.capacity.toLocaleString()+/*distance+*/" MW<br>";
                 var source = props.source;
                 for(var fuel in source){
                     content+="<b>"+fuel+"</b>: "+source["Coal"].toLocaleString()+" MW<br>";
