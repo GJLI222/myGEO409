@@ -64,8 +64,8 @@
         
     <script src="power-plants-assignment.js"> </script>    <!-- load external JS file here-->
     <script>
-    var map=L.map ( {
-        center: [39,-89.6],
+    var map=L.map ("map", {
+        center: [39,-84.6],
         zoom: 10,
         minZoom: 4,
         maxZoom: 20,        
@@ -74,40 +74,40 @@
 	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     });                         
     map.addLayer(Esri_WorldImagery);
-        var home= L.latLng(39,-89.6);
+     
+    var home= L.latLng(39.0014,-84.60013);
     plants.features.sort(function(a,b) {
-			return b.properties.capacity_mw - a.properties.capacity_mw;
+			return b.properties.capacity - a.properties.capacity;
 		});
-        var distance=home.distanceTo(feature.geometry.type.coordinates)
+        //var plantLoc=plants.geometry.coordinates
         L.geoJson (plants, {
-            pointToLayer: function(feature,latlng){
+            pointToLayer: function(feature,latlng) {
                 return L.circleMarker(latlng, {
-                    fillcolor: "red",
+                    fillColor: "red",
                     fillOpacity: 0.6,
-                    getRadius(feature.properties.capacity_mw),
+                    //radius: getRadius(feature.properties.capacity),
                 });
              },
             filter: function(feature,layer){
                 
-                distanceTo([39,-89.6], )
-                if (feature.properties.fuel_source["Coal"]){
-                    if (feature.properties.capacity_mw <= 300){
-                        if (distance <= 400) {
+                //var distance= distanceTo(home, plantLoc)
+                if (feature.properties.source["Coal"]){
+                    //if (feature.properties.capacity <= 500){
+                        //if (distance < 400) {
                         return feature;
-                        }
-                    }
+                        //}
+                    //}
                 }
             },
             onEachFeature: function(feature,layer) {
-                  var props = feature.properties;
+                var props = feature.properties;
                 var content = "<b>"+props.plant_name+"</b><br>"+
-                    props.capacity_mw.toLocaleString()+" MW<br>";
-                var source = props.fuel_source;
+                    props.capacity.toLocaleString()+" MW<br>";
+                var source = props.source;
                 for(var fuel in source){
-                    content+="<b>"+fuel+"</b>: "+source[fuel].toLocaleString()+" MW<br>";
+                    content+="<b>"+fuel+"</b>: "+source["Coal"].toLocaleString()+" MW<br>";
                 }
                 layer.bindPopup(content); 
-                
                 layer.on('mouseover', function() {
                     layer.setStyle({
                         fillColor: 'black'
