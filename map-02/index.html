@@ -77,7 +77,7 @@
      
     var home= L.latLng(39.0014,-84.60013);
     plants.features.sort(function(a,b) {
-			//return b.properties.capacity - a.properties.capacity;
+			return b.properties.capacity - a.properties.capacity;
 		});
         //var plantLoc=plants.geometry.coordinates;
         L.geoJson (plants, {
@@ -89,7 +89,7 @@
                     //radius: getRadius(feature.properties.capacity),
                 });
              },
-            //var distance= distanceTo(home, plantLoc),
+            //var distance= distanceTo(home, geometry.coodinates),
             filter: function(feature,layer){
                 if (feature.properties.source["Coal"]){
                     if (feature.properties.capacity <= 500){
