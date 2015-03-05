@@ -102,12 +102,12 @@
             onEachFeature: function(feature,layer) {
                 var props = feature.properties;
                 var content = "<b>"+props.plant_name+"</b><br>"+
-                    props.capacity.toLocaleString()+/*distance+*/" MW<br>";
+                    props.capacity.toLocaleString()+/*distance+"to my home town"*/" MW<br>"/*+"<p>This plant is "+.distance.+" from my home                           town</p>"*/;
                 var source = props.source;
                 for(var fuel in source){
                     content+="<b>"+fuel+"</b>: "+source["Coal"].toLocaleString()+" MW<br>";
-                }
-                layer.bindPopup(content); 
+                };
+                layer.bindPopup(content);
                 layer.on('mouseover', function() {
                     layer.setStyle({
                         fillColor: 'black'
