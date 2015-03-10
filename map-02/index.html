@@ -45,7 +45,6 @@
             color: #001323;
         }
         /* Additional style rules go here! */
-        
     </style>
 </head>
 
@@ -54,78 +53,85 @@
         <h1>Lexington: Aldariath Outpost</h1>
         <h2>Home of Graven Magor</h2>
     </header>
-    
+
     <div id='map'></div>
 
     <footer>
-       <p> Map authored by Grant List</p>
-        
+        <p>Map authored by Grant List</p>
+
     </footer>
-        <p> This map was created in response to a need to find local power stateing. This map will show the user the name, loction, and distance from the city of Elsmere Kentucky of all coal power plants operating within 400 meters. </p>
-    <script src="power-plants-assignment.js"> </script>    <!-- load external JS file here-->
+    <p>This map was created in response to a need to find local power stateing. This map will show the user the name, loction, and distance from the city of Elsmere Kentucky of all coal power plants operating within 400 meters.</p>
+    <script src="power-plants-assignment.js">
+    </script>
+    <!-- load external JS file here-->
     <script>
-    var map=L.map ("map", {
-        center: [39,-84.6],
-        zoom: 10,
-        minZoom: 4,
-        maxZoom: 20,        
-    });
-    var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-    });                         
-    map.addLayer(Esri_WorldImagery);
-     
-    var home= L.latLng(39.0014,-84.60013);
-    plants.features.sort(function(a,b) {
-			return b.properties.capacity - a.properties.capacity;
-		});
-        //var plantLoc=plants.geometry.coordinates;
-        
-        L.geoJson (plants, {
-            pointToLayer: function(feature,latlng) {
+        var map = L.map("map", {
+            center: [39, -84.6],
+            zoom: 6,
+            minZoom: 4,
+            maxZoom: 20,
+        });
+        var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+        map.addLayer(Esri_WorldImagery);
+
+        var home = L.latLng(39.0014, -84.60013);
+        plants.features.sort(function (a, b) {
+            return b.properties.capacity - a.properties.capacity;
+        });
+         //var plantLoc=plants.geometry.coordinates;
+
+        L.geoJson(plants, {
+            pointToLayer: function (feature, latlng) {
                 return L.circleMarker(latlng, {
                     color: "red",
                     fillColor: "red",
                     fillOpacity: 0.6,
-                    //radius: getRadius(feature.properties.capacity),
+                    radius: getRadius(feature.properties.capacity),
                 });
-             },
-            //var distance= distanceTo(home, geometry.coodinates),
-            filter: function(feature,layer){
-                if (feature.properties.source["Coal"]){
-                    if (feature.properties.capacity <= 500){
-                        //if (distance <= 500) {
-                        return feature;
-                        //}
-                    }
+            },
+
+            filter: function (feature, layer) {
+                var featureCoords = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
+                if (home.distanceTo(featureCoords) / 1000 < 400 &&
+                    feature.properties.source["Coal"] &&
+                    feature.properties.source["Coal"] <= 500) {
+                    return feature;
                 }
             },
-            onEachFeature: function(feature,layer) {
+            onEachFeature: function (feature, layer) {
+                var distance = home.distanceTo(L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0])) / 1000;
                 var props = feature.properties;
-                var content = "<b>"+props.plant_name+"</b><br>"+
-                    props.capacity.toLocaleString()+/*distance+"to my home town"*/" MW<br>"/*+"<p>This plant is "+.distance.+" from my home                           town</p>"*/;
+                var content = "<b>" + props.plant_name + "</b><br>" +
+                    props.capacity.toLocaleString() + /*distance+"to my home town"*/ " MW<br>" /*+"<p>This plant is "+.distance.+" from my home                           town</p>"*/ ;
                 var source = props.source;
-                for(var fuel in source){
-                    content+="<b>"+fuel+"</b>: "+source["Coal"].toLocaleString()+" MW<br>";
+                for (var fuel in source) {
+                    content += "<b>" + fuel + "</b>: " + source[fuel].toLocaleString() + " MW<br>";
                 };
+                content += "This plant is <b>" + distance.toLocaleString() + " km</b> from my home town."
                 layer.bindPopup(content);
-                layer.on('mouseover', function() {
+                layer.on('mouseover', function () {
                     layer.setStyle({
                         fillColor: 'black'
                     });
                 });
-                layer.on('mouseout', function() {
+                layer.on('mouseout', function () {
                     layer.setStyle({
                         fillColor: 'red'
                     });
                 });
             }
         }).addTo(map);
-        
-          // add JavaScript here
-        
+
+        function getRadius(val) {
+            var radius = Math.sqrt(val / Math.PI);
+            return radius * .8;
+        }
+
+         // add JavaScript here
     </script>
-    
+
 </body>
 
 </html>
