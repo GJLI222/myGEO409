@@ -61,7 +61,7 @@
 
 <body>
     <header>
-        <h1>Kentucky</h1>
+        <h1>Aldariath</h1>
         <h2>Power Plants</h2>
     </header>
 
@@ -77,10 +77,12 @@
     <script>
        var map = L.map("map", {
             center: [39, -84.6],
-            zoom: 6,
-            minZoom: 4,
+            zoom: 5,
+            minZoom: 2,
             maxZoom: 20,
+           
         });
+        map.doubleClickZoom.disable();
         var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
         });
@@ -162,7 +164,7 @@
                         stroke: true,
                         fill: true
                     });
-                    layer.bindPopup("I am <b>" + distance.toLocaleString() +
+                    layer.bindPopup(layer.feature.properties.plant_name+"<br>Wind</br>"+"I am <b>" + distance.toLocaleString() +
                         "km</b><br> from the click point.");
                 }
             });
@@ -181,7 +183,7 @@
                         stroke: true,
                         fill: true
                     });
-                    layer.bindPopup("I am <b>" + distance.toLocaleString() +
+                    layer.bindPopup(layer.feature.properties.plant_name+"<br>Wind</br>"+"I am <b>" + distance.toLocaleString() +
                         "km</b><br> from the click point.");
                 }
             });
@@ -200,7 +202,66 @@
                         stroke: true,
                         fill: true
                     });
-                    layer.bindPopup("I am <b>" + distance.toLocaleString() +
+                    layer.bindPopup(layer.feature.properties.plant_name+"<br>Wind</br>"+"I am <b>" + distance.toLocaleString() +
+                        "km</b><br> from the click point.");
+                }
+            });
+
+        });
+        
+        map.on('dblclick', function (e) {
+            hydroLayer.eachLayer(function (layer) {
+                var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+
+                if (distance > 200) {
+                    layer.setStyle({
+                        stroke: false,
+                        fill: false
+                    });
+                } else {
+                    layer.setStyle({
+                        stroke: true,
+                        fill: true
+                    });
+                    layer.bindPopup(layer.feature.properties.plant_name+"<br>Wind</br>"+"I am <b>" + distance.toLocaleString() +
+                        "km</b><br> from the click point.");
+                }
+            });
+        });
+        map.on('dblclick', function (e) {
+            coalLayer.eachLayer(function (layer) {
+                var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+
+                if (distance > 200) {
+                    layer.setStyle({
+                        stroke: false,
+                        fill: false
+                    });
+                } else {
+                    layer.setStyle({
+                        stroke: true,
+                        fill: true
+                    });
+                    layer.bindPopup(layer.feature.properties.plant_name+"<br>Wind</br>"+"I am <b>" + distance.toLocaleString() +
+                        "km</b><br> from the click point.");
+                }
+            });
+        });
+        map.on('dblclick', function (e) {
+            windLayer.eachLayer(function (layer) {
+                var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+
+                if (distance > 200) {
+                    layer.setStyle({
+                        stroke: false,
+                        fill: false
+                    });
+                } else {
+                    layer.setStyle({
+                        stroke: true,
+                        fill: true
+                    });
+                    layer.bindPopup(layer.feature.properties.plant_name+"<br>Wind</br>"+"I am <b>" + distance.toLocaleString() +
                         "km</b><br> from the click point.");
                 }
             });
@@ -212,10 +273,10 @@
             fillOpacity: .8
         };
         var sourcesLayers = {
-            "Hydro": hydroLayer,
-            "Wind": windLayer,
-            "Coal": coalLayer
-        }
+        "<b style='color:#1f78b4'>Hydro</b>": hydroLayer,
+        "<b style='color:green''>Wind</b>": windLayer,
+        "<b style='color:#001323; text-shadow: 0px 0px 1px #333;'>Coal</b>": coalLayer
+    }
 
         L.control.layers(null, sourcesLayers, {
             collapsed: false
