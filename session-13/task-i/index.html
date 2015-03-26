@@ -6,12 +6,12 @@
     <title>Module 13 Lab Template</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 
-   
+
     <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-     <script src="simple_statistics.js"></script>
-  
-    
+    <script src="simple_statistics.js"></script>
+
+
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 
@@ -23,18 +23,22 @@
             font-family: Lato, sans-serif;
             color: #0D0000;
         }
+        
         header {
             padding: 6px 10%;
         }
+        
         h1 {
             display: inline-block;
             margin-right: 20px;
             color: #001323;
         }
+        
         h2 {
             display: inline-block;
             color: #001323;
         }
+        
         #map {
             width: 960px;
             height: 540px;
@@ -42,17 +46,46 @@
             background: whitesmoke;
             border: 2px solid #dddedf;
         }
+        
         footer {
             padding: 6px 10%;
             width: 80%;
         }
+        
         p {
             font-size: 1em;
             color: #001323;
         }
-        
         /* ADD YOUR ADDITIONAL STYLE RULES HERE */
         
+        .legend {
+            padding: 6px 8px;
+            font-size: 1em;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+        
+        .legend h3 {
+            font-size: 1.1em;
+            font-weight: normal;
+            color: #001323;
+            margin: 0;
+        }
+        
+        .legend li {
+            list-style-type: none;
+            height: 22px;
+        }
+        
+        .legend span {
+            width: 20px;
+            height: 20px;
+            float: left;
+            margin-right: 10px;
+        }
+        
+        ;
     </style>
 </head>
 
@@ -71,152 +104,143 @@
     </footer>
 
     <script>
-        
         // WRITE YOUR CODE JAVASCRIPT CODE HERE
         $("h1").html("Housing Ownership in Kentucky");
-        
-        var options = {
-        center: [37.8, -85.8],
-        zoom: 7.4,
-        minZoom: 7.4,
-        maxZoom: 7.4,
-        dragging: false,
-        zoomControl: false
-    }
-    var map = L.map('map', options);
 
-    $.getJSON("ky_counties_housing.json", function(data) {
-        L.geoJson(data).addTo(map);
-    });
+        var options = {
+            center: [37.8, -85.8],
+            zoom: 7.4,
+            minZoom: 7.4,
+            maxZoom: 7.4,
+            dragging: false,
+            zoomControl: false
+        }
+        var map = L.map('map', options);
+
+        $.getJSON("ky_counties_housing.json", function (data) {
+            console.log(data);
+            L.geoJson(data).addTo(map);
+        });
 
         L.geoJson(data, {
-         style: function(feature) {
-            return {
+            style: function (feature) {
+                return {
                     color: '#dddddd',
                     weight: 1,
                     fillOpacity: 1,
                 };
-        }          
-    }).addTo(map);
-        
-        var dataLayer,
-        attribute = "OWNED_MORT",
-        norm = "OWNER";
-
-    $.getJSON("ky_counties_housing.json", function(data) {
-
-        dataLayer = L.geoJson(data, {
-             style: function(feature) {
-                return {
-                        color: '#dddddd',
-                        weight: 1,
-                        fillOpacity: 1,
-                        fillColor: '#1f78b4'
-                    };
-            }          
+            }
         }).addTo(map);
 
-    });
-       
+
+        var dataLayer,
+            attribute = "OWNED_FREE",
+            norm = "OWNER";
+
+        $.getJSON("ky_counties_housing.json", function (data) {
+
+            dataLayer = L.geoJson(data, {
+                style: function (feature) {
+                    return {
+                        color: '#2de21e',
+                        weight: 1,
+                        fillOpacity: 1,
+                        fillColor: '#ca11e2'
+                    };
+                }
+            }).addTo(map);
+
+        });
+
         function drawMap() {
 
+            var breaks = getClassBreaks();
+
+        }
+
+        function getClassBreaks() {
+            var values = [];
+            dataLayer.eachLayer(function (layer) {
+                var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
+                values.push(value);
+            });
+
+            var breaks = ss.jenks(values, 5);
+            console.log(breaks)
+            return breaks;
+
+        };
         var breaks = getClassBreaks();
 
-    }
-
-    function getClassBreaks() {
-         var values = [];
-    dataLayer.eachLayer(function(layer) {
-        var value = layer.feature.properties[attribute]/layer.feature.properties[norm];
-        values.push(value);   
-        }); 
-    
-          var breaks = ss.jenks(values, 5);
-        console.log(breaks)
-        return breaks;
-        
-    };
-      var breaks = getClassBreaks();
-
-    dataLayer.eachLayer(function(layer) {
-        layer.setStyle({
-            fillColor: getColor(layer.feature.properties[attribute]/layer.feature.properties[norm], breaks)
+        dataLayer.eachLayer(function (layer) {
+            layer.setStyle({
+                fillColor: getColor(layer.feature.properties[attribute] / layer.feature.properties[norm], breaks)
+            });
         });
-    });
+
         function getColor(d, breaks) {
-        if(d <= breaks[1]) {
-            return '#f1eef6';
-        } else if(d <= breaks[2]) {
-            return '#bdc9e1';
-        } else if(d <= breaks[3]) {
-            return '#74a9cf';
-        } else if(d <= breaks[4]) {
-            return '#2b8cbe'
-        } else if(d <= breaks[5]) {
-            return '#045a8d'
-        }
-    };
-        function drawLegend(breaks){
-
-        
-        var legend = L.control({position: 'topleft'});
-
-        
-        legend.onAdd = function (map) {
-
-            
-            var div = L.DomUtil.create('div', 'legend');
-
-            
-            div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3><ul>"; 
-
-            
-            for (var i = 0; i < breaks.length-1; i++) {
-                
-                var color = getColor(breaks[i + 1], breaks);
-
-                
-                div.innerHTML +=
-                    '<li><span style="background:' + color + '"></span> ' +
-                    (breaks[i]*100).toLocaleString() + ' &mdash; ' + 
-                    (breaks[i + 1]*100).toLocaleString() + '</li>';
+            if (d <= breaks[1]) {
+                return '#f1eef6';
+            } else if (d <= breaks[2]) {
+                return '#bdc9e1';
+            } else if (d <= breaks[3]) {
+                return '#74a9cf';
+            } else if (d <= breaks[4]) {
+                return '#2b8cbe'
+            } else if (d <= breaks[5]) {
+                return '#045a8d'
             }
-
-            
-            div.innerHTML += "</ul>"
-
-            
-            return div;
         };
 
-        
-        legend.addTo(map);
-    };
-        .legend {
-        padding: 6px 8px;
-        font-size: 1em;
-        background: rgba(255,255,255,0.8);
-        box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        border-radius: 5px;
-    }
-    .legend h3 {
-        font-size: 1.1em;
-        font-weight: normal;
-        color: #001323;
-        margin: 0;
-    }
-    .legend li {
-        list-style-type: none;
-        height: 22px;
-    }
-    .legend span {
-        width: 20px;
-        height: 20px;
-        float: left;
-        margin-right: 10px;
-    };
+        function drawLegend(breaks) {
+
+
+            var legend = L.control({
+                position: 'topleft'
+            });
+
+
+            legend.onAdd = function (map) {
+
+
+                var div = L.DomUtil.create('div', 'legend');
+
+
+                div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3><ul>";
+
+
+                for (var i = 0; i < breaks.length - 1; i++) {
+
+                    var color = getColor(breaks[i + 1], breaks);
+
+
+                    div.innerHTML +=
+                        '<li><span style="background:' + color + '"></span> ' +
+                        (breaks[i] * 100).toLocaleString() + ' &mdash; ' +
+                        (breaks[i + 1] * 100).toLocaleString() + '</li>';
+                }
+
+
+                div.innerHTML += "</ul>"
+
+
+                return div;
+            };
+
+
+            legend.addTo(map);
+        };
+
+        map.on('click', function (layer) {
+                    dataLayer.eachLayer(function (layer) {
+                                var content = "<b>" + $.properties.NAME + "</b><br>" +
+                                    $.properties.OWNED_FREE + " MW<br>";
+                                layer.bindPopup(content);
+                            });
+        });
+                                        
     </script>
-    
+
 </body>
 
 </html>
