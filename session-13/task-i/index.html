@@ -146,12 +146,14 @@
                 layer.setStyle({
                     fillColor: getColor(props[attribute]/props[norm], breaks)
                 }); 
-                var content = "<b>" + layer.feature.properties[NAME]"</b></br>" +attribute+":"+ ((props[attribute]/props[norms])*100);
+                var content = "<b>" + props["NAME"] + "</b></br>" +attribute+":"+ ((props[attribute]/props[norm])*100);
                 layer.bindPopup(content);
-                drawLegend(breaks);
+                
 
+        })
+        drawLegend(breaks);
         }
-
+        
         function getClassBreaks() {
             var values = [];
             dataLayer.eachLayer(function (layer) {
@@ -164,13 +166,7 @@
             return breaks;
 
         };
-        var breaks = getClassBreaks();
-
-        dataLayer.eachLayer(function (layer) {
-            layer.setStyle({
-                fillColor: getColor(layer.feature.properties[attribute] / layer.feature.properties[norm], breaks)
-            });
-        });
+    
 
         function getColor(d, breaks) {
             if (d <= breaks[1]) {
