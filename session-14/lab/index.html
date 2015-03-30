@@ -3,14 +3,12 @@
 
 <head>
     <meta charset=utf-8 />
-    <title>Module 13 Lab Template</title>
+    <title>Task J starter template</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-
 
     <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
     <script src="simple_statistics.js"></script>
-
 
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
@@ -23,22 +21,18 @@
             font-family: Lato, sans-serif;
             color: #0D0000;
         }
-        
         header {
             padding: 6px 10%;
         }
-        
         h1 {
             display: inline-block;
             margin-right: 20px;
             color: #001323;
         }
-        
         h2 {
             display: inline-block;
             color: #001323;
         }
-        
         #map {
             width: 960px;
             height: 540px;
@@ -46,72 +40,64 @@
             background: whitesmoke;
             border: 2px solid #dddedf;
         }
-        
         footer {
             padding: 6px 10%;
             width: 80%;
         }
-        
         p {
             font-size: 1em;
             color: #001323;
         }
-        /* ADD YOUR ADDITIONAL STYLE RULES HERE */
-<<<<<<< HEAD
-=======
-        
+       
         .legend {
             padding: 6px 8px;
             font-size: 1em;
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
             border-radius: 5px;
         }
-        
         .legend h3 {
             font-size: 1.1em;
             font-weight: normal;
             color: #001323;
             margin: 0;
         }
-        
         .legend li {
             list-style-type: none;
             height: 22px;
         }
-        
         .legend span {
             width: 20px;
             height: 20px;
             float: left;
             margin-right: 10px;
         }
+        .leaflet-popup-content {
+            max-width: 160px;   
+        }
         
-        ;
->>>>>>> origin/master
     </style>
 </head>
 
 <body>
     <header>
-        <h1>Kntucky Housing</h1>
-        <h2>Placing the Wildcats</h2>
+        <h1>Map Title</h1>
+        <h2>Map Subtitle</h2>
     </header>
+
     <div id='map'></div>
 
     <footer>
-        <p>Map authored by Grant List</p>
+        <p>Map authored by YOUR NAME</p>
         <p>Additional information about the data and map goes here.</p>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis urna magna, maximus nec laoreet sit amet, dictum ultricies nibh. Ut id auctor lacus. Nam a dolor et justo luctus luctus. Duis a elit eget risus dictum vehicula id eu elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed sed enim nisl. Vestibulum commodo imperdiet lacus, sed facilisis erat placerat sit amet. Nulla consequat malesuada neque eget aliquet. Integer non convallis nisl, gravida ultrices ex. Fusce nec vestibulum elit. Sed elementum lectus ipsum, vulputate elementum ex laoreet a. Aenean eu ex varius, varius felis vitae, efficitur nulla. Quisque pretium laoreet ante, in sodales dui vehicula at. Mauris eu sem sapien.
         </p>
     </footer>
 
     <script>
-        // WRITE YOUR CODE JAVASCRIPT CODE HERE
-        $("h1").html("Housing Ownership in Kentucky");
-
+        
         var options = {
-            center: [37.8, -85.8],
+            center: [38.2, -85.8],
             zoom: 7.4,
             minZoom: 7.4,
             maxZoom: 7.4,
@@ -119,192 +105,106 @@
             zoomControl: false
         }
         var map = L.map('map', options);
-
-<<<<<<< HEAD
-        $.getJSON("ky_counties_housing.json", function (data) {
-            L.geoJson(data).addTo(map);
-        });
-
-        L.geoJson(data, {
-            style: function (feature) {
-                return {
-                    color: '#dddddd',
-                    weight: 1,
-                    fillOpacity: 1,
-                };
-            }
-        }).addTo(map);
-
+        
+        // Begin module 13 code here
+        
         var dataLayer,
             attribute = "OWNED_MORT",
-=======
-
-        var dataLayer,
-            attribute = "OWNED_FREE",
->>>>>>> origin/master
-            norm = "OWNER";
-
-        $.getJSON("ky_counties_housing.json", function (data) {
-
+            norm = "OCCUPIED";
+        
+        $.getJSON("ky_counties_housing.json", function(data) {
+            
             dataLayer = L.geoJson(data, {
-                style: function (feature) {
+                 style: function(feature) {
                     return {
-<<<<<<< HEAD
-                        color: '#dddddd',
-=======
-                        color: '#2de21e',
->>>>>>> origin/master
-                        weight: 1,
-                        fillOpacity: 1,
-                        fillColor: '#ca11e2'
-                    };
-                }
+                            color: '#dddddd',
+                            weight: 2,
+                            fillOpacity: 1,
+                            fillColor: '#1f78b4'
+                        };
+                }          
             }).addTo(map);
-<<<<<<< HEAD
-
-=======
             
             drawMap();
->>>>>>> origin/master
+              
         });
-
+        
         function drawMap() {
-
-            var breaks = getClassBreaks();
-<<<<<<< HEAD
-=======
-            dataLayer.eachLayer(function(layer) {
-                var props=layer.feature.properties;
-                layer.setStyle({
-                    fillColor: getColor(props[attribute]/props[norm], breaks)
-                }); 
-                var content = "<b>" + layer.feature.properties[NAME]"</b></br>" +attribute+":"+ ((props[attribute]/props[norms])*100);
-                layer.bindPopup(content);
-                drawLegend(breaks);
->>>>>>> origin/master
-
-        }
-
-        function getClassBreaks() {
-            var values = [];
-            dataLayer.eachLayer(function (layer) {
-                var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
-                values.push(value);
-            });
-
-            var breaks = ss.jenks(values, 5);
-<<<<<<< HEAD
-            console.log(breaks)
-=======
             
->>>>>>> origin/master
-            return breaks;
+            var breaks = getClassBreaks();
 
-        };
-        var breaks = getClassBreaks();
-
-        dataLayer.eachLayer(function (layer) {
-            layer.setStyle({
-                fillColor: getColor(layer.feature.properties[attribute] / layer.feature.properties[norm], breaks)
+            dataLayer.eachLayer(function(layer) {
+                
+                var props = layer.feature.properties;
+                
+                layer.setStyle({
+                    fillColor: getColor(props[attribute]/
+                                        props[norm], breaks)
+                });
+                layer.bindPopup("<b>"+props["NAME"]+" County</b></br>" +
+                                attribute + ": " +
+                                ((props[attribute]/props[norm])*100).toLocaleString());  
             });
-        });
-
+            
+            drawLegend(breaks);
+        }
+        
+        function getClassBreaks() {
+            
+            var values = [];
+            
+            dataLayer.eachLayer(function(layer) {
+                var value = layer.feature.properties[attribute]/layer.feature.properties[norm];
+                values.push(value);   
+            }); 
+            
+            var breaks = ss.jenks(values, 5);
+            return breaks;
+            
+        }   
+        
         function getColor(d, breaks) {
-            if (d <= breaks[1]) {
+            if(d <= breaks[1]) {
                 return '#f1eef6';
-            } else if (d <= breaks[2]) {
+            } else if(d <= breaks[2]) {
                 return '#bdc9e1';
-            } else if (d <= breaks[3]) {
+            } else if(d <= breaks[3]) {
                 return '#74a9cf';
-            } else if (d <= breaks[4]) {
+            } else if(d <= breaks[4]) {
                 return '#2b8cbe'
-            } else if (d <= breaks[5]) {
+            } else if(d <= breaks[5]) {
                 return '#045a8d'
             }
-        };
-
+        }
+        
         function drawLegend(breaks) {
-
-
-            var legend = L.control({
-                position: 'topleft'
-            });
-
+            
+            var legend = L.control({position: 'topleft'});
 
             legend.onAdd = function (map) {
-<<<<<<< HEAD
-
-
+                
                 var div = L.DomUtil.create('div', 'legend');
+                
+                div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3><ul>"; 
 
-
-=======
-
-
-                var div = L.DomUtil.create('div', 'legend');
-
-
->>>>>>> origin/master
-                div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3><ul>";
-
-
-                for (var i = 0; i < breaks.length - 1; i++) {
-
+                for (var i = 0; i < breaks.length-1; i++) {
                     var color = getColor(breaks[i + 1], breaks);
-
-
                     div.innerHTML +=
                         '<li><span style="background:' + color + '"></span> ' +
-                        (breaks[i] * 100).toLocaleString() + ' &mdash; ' +
-                        (breaks[i + 1] * 100).toLocaleString() + '</li>';
+                        (breaks[i]*100).toLocaleString() + ' &mdash; ' + 
+                        (breaks[i + 1]*100).toLocaleString() + '</li>';
                 }
-
-
-<<<<<<< HEAD
                 div.innerHTML += "</ul>"
-=======
-                div.innerHTML += "</ul>";
->>>>>>> origin/master
-
-
                 return div;
+                
+                    
             };
 
-
             legend.addTo(map);
-<<<<<<< HEAD
-        };
-        .legend {
-            padding: 6 px 8 px;
-            font - size: 1e m;
-            background: rgba(255, 255, 255, 0.8);
-            box - shadow: 0 0 15 px rgba(0, 0, 0, 0.2);
-            border - radius: 5 px;
-        }
-        .legend h3 {
-            font - size: 1.1e m;
-            font - weight: normal;
-            color: #001323;
-        margin: 0;
-    }
-    .legend li {
-        list-style-type: none;
-        height: 22px;
-    }
-    .legend span {
-        width: 20px;
-        height: 20px;
-        float: left;
-        margin-right: 10px;
-    };
-=======
         }
 
-       
-                                        
->>>>>>> origin/master
     </script>
-
+    
 </body>
 
 </html>
