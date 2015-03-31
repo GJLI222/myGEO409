@@ -181,9 +181,16 @@
                     updateInfo(this);
                     dataLayer.on('mouseover', function() {
                         $(".info").show();
+                          layer.setStyle({
+                            fillColor: red
+                        });
                     });
                     dataLayer.on('mouseout', function() {
-                        $(".info").hide();    
+                        $(".info").hide();
+                        layer.setStyle({
+                            fillColor: getColor(props[attribute]/
+                                        props[norm], breaks)
+                        });
                     });
                 });
                 layer.bindPopup("<b>"+layer.feature.properties["NAME"]+" County</b></br>" +
