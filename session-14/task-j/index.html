@@ -102,7 +102,7 @@
             <option value="VACANT_FOR" selected>vacant units for rent</option>
             <option value="VACANT_FO2">for sale only</option> 
             <option value="VACANT_REN">rented not occupied</option>
-            <option value="VACANT_SOL">sole not occupied</option>
+            <option value="VACANT_SOL">sold not occupied</option>
             <option value="VACANT_SEA">seasonally or recreational</option>
             <option value="VACANT_MIG">migratory workers</option>
             <option value="VACANT_OTH">other</option>
@@ -132,10 +132,14 @@
         var map = L.map('map', options);
         
         var labels = {
-        "OCCUPIED": "occupied units",
-        "OWNED_MORT": "% occupied housing units owned with mortgage",
-        "OWNED_FREE": "% occupied housing units owned free and clear",
-        "RENTER": "% occupied housing units rented"   
+        "VACANT": "vacant units",
+        "VACANT_FOR": "% vacant housing units for rent",
+        "VACANT_FO2": "% vacant housing units for sale",
+        "VACANT_REN": "% vacant housing units rented",
+        "VACANT_SOL": "% vacant sold housing units",
+        "VACANT_SEA": "% seasonal use",
+        "VACANT_MIG": "% migratory workers",
+        "VACANT_OTH": "% other vacancy"
     }
         
         var dataLayer,
@@ -159,8 +163,7 @@
             drawLegend();
             drawMap();
             drawInfo();
-            
-                       
+                                   
         });
         
         function drawMap() {
@@ -199,7 +202,7 @@
                         labels[attribute] + ": " + ((layer.feature.properties[attribute]/
                                 layer.feature.properties[norm])*100).toLocaleString());
                 
-        });
+            });
             
             updateLegend(breaks);
 
