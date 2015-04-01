@@ -174,20 +174,21 @@
                     fillColor: getColor(props[attribute]/
                                         props[norm], breaks)
                 });
-                layer.bindPopup("<b>"+props["NAME"]+" County</b></br>" +
-                                attribute + ": " +
-                                ((props[attribute]/props[norm])*100).toLocaleString());  
+                layer.bindPopup("<b>"+props["NAME"]+" County</b></br>" +attribute + ": " +
+                                    ((props[attribute]/props[norm])*100).toLocaleString());  
                 layer.on('mouseover', function() {
                     updateInfo(this);
                     dataLayer.on('mouseover', function() {
                         $(".info").show();
-                          layer.setStyle({
-                            fillColor: red
+                        dataLayer.setStyle({
+                            fillColor: 'red'
                         });
                     });
+                });
+                layer.on('mouseout', function() {
                     dataLayer.on('mouseout', function() {
                         $(".info").hide();
-                        layer.setStyle({
+                        dataLayer.setStyle({
                             fillColor: getColor(props[attribute]/
                                         props[norm], breaks)
                         });
