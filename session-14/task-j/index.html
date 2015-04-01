@@ -152,7 +152,8 @@
                             fillOpacity: 1,
                             fillColor: '#1f78b4'
                         };
-                }          
+                }
+                
             }).addTo(map);
             ui();
             drawLegend();
@@ -176,29 +177,29 @@
                 });
                 layer.bindPopup("<b>"+props["NAME"]+" County</b></br>" +attribute + ": " +
                                     ((props[attribute]/props[norm])*100).toLocaleString());  
+                
+                
                 layer.on('mouseover', function() {
                     updateInfo(this);
-                    dataLayer.on('mouseover', function() {
-                        $(".info").show();
-                        dataLayer.setStyle({
+                    $(".info").show();
+                    layer.setStyle({
                             fillColor: 'red'
                         });
-                    });
                 });
+                    
                 layer.on('mouseout', function() {
-                    dataLayer.on('mouseout', function() {
-                        $(".info").hide();
-                        dataLayer.setStyle({
+                    $(".info").hide();
+                    layer.setStyle({
                             fillColor: getColor(props[attribute]/
                                         props[norm], breaks)
-                        });
                     });
                 });
+            
                 layer.bindPopup("<b>"+layer.feature.properties["NAME"]+" County</b></br>" +
                         labels[attribute] + ": " + ((layer.feature.properties[attribute]/
                                 layer.feature.properties[norm])*100).toLocaleString());
                 
-            });
+        });
             
             updateLegend(breaks);
 
