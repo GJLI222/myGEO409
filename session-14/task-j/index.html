@@ -21,18 +21,22 @@
             font-family: Lato, sans-serif;
             color: #0D0000;
         }
+        
         header {
             padding: 6px 10%;
         }
+        
         h1 {
             display: inline-block;
             margin-right: 20px;
             color: #001323;
         }
+        
         h2 {
             display: inline-block;
             color: #001323;
         }
+        
         #map {
             width: 960px;
             height: 540px;
@@ -40,53 +44,60 @@
             background: whitesmoke;
             border: 2px solid #dddedf;
         }
+        
         footer {
             padding: 6px 10%;
             width: 80%;
         }
+        
         p {
             font-size: 1em;
             color: #001323;
         }
-       
+        
         .legend {
             padding: 6px 8px;
             font-size: 1em;
-            background: rgba(255,255,255,0.8);
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             border-radius: 5px;
         }
+        
         .legend h3 {
             font-size: 1.1em;
             font-weight: normal;
             color: #001323;
             margin: 0;
         }
+        
         .legend li {
             list-style-type: none;
             height: 22px;
         }
+        
         .legend span {
             width: 20px;
             height: 20px;
             float: left;
             margin-right: 10px;
         }
-        .leaflet-popup-content {
-            max-width: 160px;   
-        }
-        .info {
-        padding: 6px 8px;
-        font-size: 1em;
-        background: rgba(255,255,255,0.8);
-        box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        border-radius: 5px;
-        text-align: right;   
-    }
-        .info h3 {
-        margin: 0;   
-    }
         
+        .leaflet-popup-content {
+            max-width: 160px;
+        }
+        
+        .info {
+            padding: 6px 8px;
+            font-size: 1em;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            text-align: right;
+        }
+        
+        .info h3 {
+            margin: 0;
+        }
     </style>
 </head>
 
@@ -97,19 +108,20 @@
     </header>
 
     <div id='ui-controls'>
-     <label>Choose a data attribute:<br>
-        <select name="vacant">
-            <option value="VACANT_FOR" selected>vacant units for rent</option>
-            <option value="VACANT_FO2">for sale only</option> 
-            <option value="VACANT_REN">rented not occupied</option>
-            <option value="VACANT_SOL">sold not occupied</option>
-            <option value="VACANT_SEA">seasonally or recreational</option>
-            <option value="VACANT_MIG">migratory workers</option>
-            <option value="VACANT_OTH">other</option>
-        </select>
+        <label>Choose a data attribute:
+            <br>
+            <select name="vacant">
+                <option value="VACANT_FOR" selected>vacant units for rent</option>
+                <option value="VACANT_FO2">for sale only</option>
+                <option value="VACANT_REN">rented not occupied</option>
+                <option value="VACANT_SOL">sold not occupied</option>
+                <option value="VACANT_SEA">seasonally or recreational</option>
+                <option value="VACANT_MIG">migratory workers</option>
+                <option value="VACANT_OTH">other</option>
+            </select>
         </label>
     </div>
-    
+
     <div id='map'></div>
 
     <footer>
@@ -120,7 +132,6 @@
     </footer>
 
     <script>
-        
         var options = {
             center: [38.2, -85.8],
             zoom: 7.4,
@@ -130,196 +141,198 @@
             zoomControl: false
         }
         var map = L.map('map', options);
-        
+
         var labels = {
-        "VACANT": "vacant units",
-        "VACANT_FOR": "% vacant housing units for rent",
-        "VACANT_FO2": "% vacant housing units for sale",
-        "VACANT_REN": "% vacant housing units rented",
-        "VACANT_SOL": "% vacant sold housing units",
-        "VACANT_SEA": "% seasonal use",
-        "VACANT_MIG": "% migratory workers",
-        "VACANT_OTH": "% other vacancy"
-    }
-        
+            "VACANT": "vacant units",
+            "VACANT_FOR": "% vacant housing units for rent",
+            "VACANT_FO2": "% vacant housing units for sale",
+            "VACANT_REN": "% vacant housing units rented",
+            "VACANT_SOL": "% vacant sold housing units",
+            "VACANT_SEA": "% seasonal use",
+            "VACANT_MIG": "% migratory workers",
+            "VACANT_OTH": "% other vacancy"
+        }
+
         var dataLayer,
             attribute = "VACANT_FOR",
             norm = "VACANT";
-        
-        $.getJSON("ky_counties_housing.json", function(data) {
-            
-            dataLayer = L.geoJson(data, {
-                 style: function(feature) {
-                    return {
-                            color: '#dddddd',
-                            weight: 2,
-                            fillOpacity: 1,
-                            fillColor: '#1f78b4'
-                        };
-                }
-                
-            }).addTo(map);
-            ui();
-            drawLegend();
-            drawMap();
-            drawInfo();
-                                   
-        });
-        
-        function drawMap() {
-            
-            var breaks = getClassBreaks();
 
-            dataLayer.eachLayer(function(layer) {
-                
-                var props = layer.feature.properties;
-                
-                layer.setStyle({
-                    fillColor: getColor(props[attribute]/
-                                        props[norm], breaks)
-                });
-                layer.bindPopup("<b>"+props["NAME"]+" County</b></br>" +attribute + ": " +
-                                    ((props[attribute]/props[norm])*100).toLocaleString());  
-                
-                
-                layer.on('mouseover', function() {
-                    updateInfo(this);
-                    $(".info").show();
+        $.getJSON("ky_counties_housing.json", function (data) {
+
+            dataLayer = L.geoJson(data, {
+                style: function (feature) {
+                    return {
+                        color: '#dddddd',
+                        weight: 2,
+                        fillOpacity: 1,
+                        fillColor: '#1f78b4'
+                    };
+                }
+
+            }).addTo(map);
+            //adds data to code
+            ui();
+            //runs data through ui function, creates drop down menu
+            drawLegend();
+            //runs data through legend function, creates legend
+            drawMap();
+            //runs data through drawMap function, creates map layer
+            drawInfo();
+            //runs data through drawinfo function                       
+        });
+
+        function drawMap() {
+
+                var breaks = getClassBreaks(); //uses getClassBreaks function here
+
+                dataLayer.eachLayer(function (layer) {
+
+                    var props = layer.feature.properties;
+
                     layer.setStyle({
+                        fillColor: getColor(props[attribute] /
+                            props[norm], breaks)
+                    });
+                    //sets color based on level of current stat in county
+                    layer.bindPopup("<b>" + props["NAME"] + " County</b></br>" + attribute + ": " +
+                        ((props[attribute] / props[norm]) * 100).toLocaleString()); //creates popup info 
+
+
+                    layer.on('mouseover', function () {
+                        updateInfo(this); //add quick look info table in upper right of current county
+                        $(".info").show(); //shows info
+                        layer.setStyle({
                             fillColor: 'red'
                         });
-                });
-                    
-                layer.on('mouseout', function() {
-                    $(".info").hide();
-                    layer.setStyle({
-                            fillColor: getColor(props[attribute]/
-                                        props[norm], breaks)
-                    });
-                });
-            
-                layer.bindPopup("<b>"+layer.feature.properties["NAME"]+" County</b></br>" +
-                        labels[attribute] + ": " + ((layer.feature.properties[attribute]/
-                                layer.feature.properties[norm])*100).toLocaleString());
-                
-            });
-            
-            updateLegend(breaks);
+                    }); //changes color of polygon when mouseover occurs
 
-        }
-        
+                    layer.on('mouseout', function () {
+                        $(".info").hide(); //hides info
+                        layer.setStyle({
+                            fillColor: getColor(props[attribute] /
+                                props[norm], breaks)
+                        });
+                    }); //changes color back
+
+                    layer.bindPopup("<b>" + layer.feature.properties["NAME"] + " County</b></br>" +
+                        labels[attribute] + ": " + ((layer.feature.properties[attribute] /
+                            layer.feature.properties[norm]) * 100).toLocaleString());
+
+                });
+
+                updateLegend(breaks); //puts legend info in breaks function
+
+            } //end drawMap function
+
         function getClassBreaks() {
-            
-            var values = [];
-            
-            dataLayer.eachLayer(function(layer) {
-                var value = layer.feature.properties[attribute]/layer.feature.properties[norm];
-                values.push(value);   
-            }); 
-            
+
+            var values = []; //open array for values
+
+            dataLayer.eachLayer(function (layer) {
+                var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
+                values.push(value);
+            });
+            //adds layer for data
             var breaks = ss.jenks(values, 5);
             return breaks;
-            
-        }   
-        
+
+        }
+
         function getColor(d, breaks) {
-            if(d <= breaks[1]) {
-                return '#f1eef6';
-            } else if(d <= breaks[2]) {
-                return '#bdc9e1';
-            } else if(d <= breaks[3]) {
-                return '#74a9cf';
-            } else if(d <= breaks[4]) {
-                return '#2b8cbe'
-            } else if(d <= breaks[5]) {
-                return '#045a8d'
-            }
-        }
-        
-        function drawLegend(breaks) {
-            
-            var legend = L.control({position: 'topleft'});
-
-            legend.onAdd = function (map) {
-                
-                var div = L.DomUtil.create('div', 'legend');
-                
-                div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3><ul>"; 
-
-               /*for (var i = 0; i < breaks.length-1; i++) {
-                    var color = getColor(breaks[i + 1], breaks);
-                    div.innerHTML +=
-                        '<li><span style="background:' + color + '"></span> ' +
-                        (breaks[i]*100).toLocaleString() + ' &mdash; ' + 
-                        (breaks[i + 1]*100).toLocaleString() + '</li>';
+                if (d <= breaks[1]) {
+                    return '#f1eef6';
+                } else if (d <= breaks[2]) {
+                    return '#bdc9e1';
+                } else if (d <= breaks[3]) {
+                    return '#74a9cf';
+                } else if (d <= breaks[4]) {
+                    return '#2b8cbe'
+                } else if (d <= breaks[5]) {
+                    return '#045a8d'
                 }
-                div.innerHTML += "</ul>"*/
-                
-                return div;
-                var legend = $('.legend').html("<h3>" + labels[attribute] + "</h3><ul>");                    
-            };
-
-            legend.addTo(map);
-        }
-        
-        function ui() {
-            var dataView = L.control({position: 'topleft'});
-
-            dataView.onAdd = function(map) {
-                var controls = L.DomUtil.get('ui-controls');
-                return controls;
             }
+            //function allows different levels of data
+        function drawLegend(breaks) {
 
-            dataView.addTo(map);
-        }
-        $('select[name="vacant"]').change(function() {
-            attribute=$(this).val();
+                var legend = L.control({
+                    position: 'topleft'
+                });
+
+                legend.onAdd = function (map) {
+
+                    var div = L.DomUtil.create('div', 'legend');
+
+                    div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3><ul>";
+
+                    return div;
+                    var legend = $('.legend').html("<h3>" + labels[attribute] + "</h3><ul>");
+                };
+
+                legend.addTo(map);
+            }
+            //creates legend that classifies differnt levels of the data
+        function ui() {
+                var dataView = L.control({
+                    position: 'topleft'
+                });
+
+                dataView.onAdd = function (map) {
+                    var controls = L.DomUtil.get('ui-controls');
+                    return controls;
+                }
+
+                dataView.addTo(map);
+            }
+            //enables user control box of map
+        $('select[name="vacant"]').change(function () {
+            attribute = $(this).val();
             drawMap();
         });
-        
+        //uses values from vacant category
         function updateLegend(breaks) {
 
-        var legend = $('.legend').html("<h3>" + attribute + "</h3><ul>"); 
+            var legend = $('.legend').html("<h3>" + attribute + "</h3><ul>");
 
-        for (var i = 0; i < breaks.length-1; i++) {
-            var color = getColor(breaks[i + 1], breaks);
-            legend.append('<li><span style="background:' + color + '"></span> ' +
-                (breaks[i]*100).toLocaleString() + ' &mdash; ' + 
-                (breaks[i + 1]*100).toLocaleString() + '</li>');
-        }
-        legend.append("</ul>");
-    };
-        
+            for (var i = 0; i < breaks.length - 1; i++) {
+                var color = getColor(breaks[i + 1], breaks);
+                legend.append('<li><span style="background:' + color + '"></span> ' +
+                    (breaks[i] * 100).toLocaleString() + ' &mdash; ' +
+                    (breaks[i + 1] * 100).toLocaleString() + '</li>');
+            }
+            legend.append("</ul>");
+        };
+        //updates legend according to user selected
         function drawInfo() {
 
-        var info = L.control({position: 'topright'});
+            var info = L.control({
+                position: 'topright'
+            });//puts temp info box on top right
 
-        info.onAdd = function(map) {
+            info.onAdd = function (map) {
 
-            var div = L.DomUtil.create('div', 'info');
+                var div = L.DomUtil.create('div', 'info');
 
-            return div;  
+                return div;
 
-        }
-        info.addTo(map);
-        $(".info").hide(); 
-    };
-        
+            }
+            info.addTo(map);
+            $(".info").hide();
+        };//function uses mouseover to get data for info display
+
         function updateInfo(layer) {
 
-        var props = layer.feature.properties;
+            var props = layer.feature.properties;
 
-        var html = "<h3>"+props['NAME']+" County</h3>"+
-                    "total # occupied units: <b>"+ props["OCCUPIED"]+"</b><br>"+
-                    "# owned with mortgage or loan: <b>"+ props["OWNED_MORT"]+"</b><br>"+
-                    "# owned free and clear: <b>"+ props["OWNED_FREE"]+"</b><br>"+
-                    "# occupied by renters: <b>"+ props["RENTER"]+"</b>"
+            var html = "<h3>" + props['NAME'] + " County</h3>" +
+                "total # occupied units: <b>" + props["OCCUPIED"] + "</b><br>" +
+                "# owned with mortgage or loan: <b>" + props["OWNED_MORT"] + "</b><br>" +
+                "# owned free and clear: <b>" + props["OWNED_FREE"] + "</b><br>" +
+                "# occupied by renters: <b>" + props["RENTER"] + "</b>"
 
-        $(".info").html(html);
-    };
-        
+            $(".info").html(html);
+        };//changes info when new county selected
     </script>
-    
+
 </body>
 
 </html>
