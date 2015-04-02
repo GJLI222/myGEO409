@@ -195,7 +195,7 @@
                     });
                     //sets color based on level of current stat in county
                     layer.bindPopup("<b>" + props["NAME"] + " County</b></br>" + attribute + ": " +
-                        ((props[attribute] / props[norm]) * 100).toLocaleString()); //creates popup info 
+                        ((props[attribute] / props[norm]) * 100).toLocaleString()); //creates popup info database 
 
 
                     layer.on('mouseover', function () {
@@ -204,7 +204,7 @@
                         layer.setStyle({
                             fillColor: 'red'
                         });
-                    }); //changes color of polygon when mouseover occurs
+                    }); //changes color of polygon and adds quick info when mouseover occurs
 
                     layer.on('mouseout', function () {
                         $(".info").hide(); //hides info
@@ -212,7 +212,7 @@
                             fillColor: getColor(props[attribute] /
                                 props[norm], breaks)
                         });
-                    }); //changes color back
+                    }); //changes color back and hides info when mouse leaves polygon
 
                     layer.bindPopup("<b>" + layer.feature.properties["NAME"] + " County</b></br>" +
                         labels[attribute] + ": " + ((layer.feature.properties[attribute] /
@@ -232,12 +232,12 @@
                 var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
                 values.push(value);
             });
-            //adds layer for data
+            //creates layer for data
             var breaks = ss.jenks(values, 5);
-            return breaks;
+            return breaks;//puts info through getClassBreaks function
 
         }
-
+//separates data into different tiers
         function getColor(d, breaks) {
                 if (d <= breaks[1]) {
                     return '#f1eef6';
@@ -251,7 +251,7 @@
                     return '#045a8d'
                 }
             }
-            //function allows different levels of data
+            //function allows different levels of data to be represented by different colors
         function drawLegend(breaks) {
 
                 var legend = L.control({
@@ -270,7 +270,7 @@
 
                 legend.addTo(map);
             }
-            //creates legend that classifies differnt levels of the data
+            //creates legend that classifies differnt tiers of the data
         function ui() {
                 var dataView = L.control({
                     position: 'topleft'
@@ -301,7 +301,7 @@
             }
             legend.append("</ul>");
         };
-        //updates legend according to user selected
+        //updates legend according to user selection
         function drawInfo() {
 
             var info = L.control({
