@@ -57,6 +57,8 @@
             color: #001323;
         }
         /* ADD YOUR ADDITIONAL STYLE RULES HERE */
+<<<<<<< HEAD
+=======
         
         .legend {
             padding: 6px 8px;
@@ -86,6 +88,7 @@
         }
         
         ;
+>>>>>>> origin/master
     </style>
 </head>
 
@@ -116,8 +119,7 @@
             zoomControl: false
         }
         var map = L.map('map', options);
-
-
+        
         var dataLayer,
             attribute = "OWNED_FREE",
             norm = "OWNER";
@@ -127,6 +129,7 @@
             dataLayer = L.geoJson(data, {
                 style: function (feature) {
                     return {
+
                         color: '#2de21e',
                         weight: 1,
                         fillOpacity: 1,
@@ -134,24 +137,27 @@
                     };
                 }
             }).addTo(map);
+
             
             drawMap();
+
         });
 
         function drawMap() {
 
             var breaks = getClassBreaks();
-            dataLayer.eachLayer(function(layer) {
-                var props=layer.feature.properties;
-                layer.setStyle({
-                    fillColor: getColor(props[attribute]/props[norm], breaks)
-                }); 
-                var content = "<b>" + props["NAME"] + "</b></br>" +attribute+":"+ ((props[attribute]/props[norm])*100);
-                layer.bindPopup(content);
-                
 
-        })
-        drawLegend(breaks);
+                dataLayer.eachLayer(function(layer) {
+                    var props=layer.feature.properties;
+                    layer.setStyle({
+                        fillColor: getColor(props[attribute]/props[norm], breaks)
+                    }); 
+                    var content = "<b>" + props["NAME"] + "</b></br>" +attribute+":"+ ((props[attribute]/props[norm])*100);
+                    layer.bindPopup(content);
+
+
+            });
+             drawLegend(breaks);
         }
         
         function getClassBreaks() {
@@ -162,7 +168,7 @@
             });
 
             var breaks = ss.jenks(values, 5);
-            
+
             return breaks;
 
         };
@@ -196,6 +202,7 @@
                 var div = L.DomUtil.create('div', 'legend');
 
 
+
                 div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3><ul>";
 
 
@@ -210,7 +217,6 @@
                         (breaks[i + 1] * 100).toLocaleString() + '</li>';
                 }
 
-
                 div.innerHTML += "</ul>";
 
 
@@ -219,10 +225,8 @@
 
 
             legend.addTo(map);
-        }
+        };
 
-       
-                                        
     </script>
 
 </body>
