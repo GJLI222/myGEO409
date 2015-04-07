@@ -9,6 +9,7 @@
     <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.0/papaparse.min.js"></script>
+    <script src="simple_statistics.js"></script>
 
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
@@ -94,19 +95,23 @@
         
         
         // load map tiles and add to map
-       var options = {
-            center: [38.2, -94],
+          
+        var map= L.map("map", {
+            center: [37.8163, -97],
             zoom: 4,
-            minZoom: 4,
+            minZoom: 3,
             maxZoom: 6,
             dragging: true,
             zoomControl: true
-        }
-        var map = L.map('map', options);
+        });
+             var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+});                         
+    map.addLayer(Esri_WorldImagery);
         
-                      
         // declare global variables
-          var dataLayer;      
+        var dataLayer,
+                attribute="2001";
         // AJAX requests to load data files
             
     $.getJSON("us-states.json", function(states) {
@@ -168,12 +173,11 @@
                     var props = layer.feature.properties;
 
                     layer.setStyle({
-                        fillColor: getColor(props[attribute] /
-                            props[norm], breaks)
+                        fillColor: getColor(props[attribute], breaks)
                     });
                     //sets color based on level of current stat in county
                     layer.bindPopup("<b>" + props["NAME"] + " County</b></br>" + attribute + ": " +
-                        ((props[attribute] / props[norm]) * 100).toLocaleString()); //creates popup info database 
+                        ((props[attribute]) * 100).toLocaleString()); //creates popup info database 
 
 
                     layer.on('mouseover', function () {
@@ -187,14 +191,12 @@
                     layer.on('mouseout', function () {
                         $(".info").hide(); //hides info
                         layer.setStyle({
-                            fillColor: getColor(props[attribute] /
-                                props[norm], breaks)
+                            fillColor: getColor(props[attribute], breaks)
                         });
                     }); //changes color back and hides info when mouse leaves polygon
-
-                    layer.bindPopup("<b>" + layer.feature.properties["NAME"] + " County</b></br>" +
-                        labels[attribute] + ": " + ((layer.feature.properties[attribute] /
-                            layer.feature.properties[norm]) * 100).toLocaleString());
+                    console.log(layer.feature);
+                    layer.bindPopup("<b>" + "Sword" +" </b><br>" + attribute + ": ".toLocaleString());
+//                    layer.bindPopup("<b>" + layer.feature.properties["State_Name"] + " </b></br>" + attribute ": " + ((layer.feature.properties[attribute]) * 100).toLocaleString());
 
                 });
                 
@@ -242,7 +244,7 @@
             var values = []; //open array for values
 
             dataLayer.eachLayer(function (layer) {
-                var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
+                var value = layer.feature.properties[attribute];
                 values.push(Number(value));
             });
             //creates layer for data
