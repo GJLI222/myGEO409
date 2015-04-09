@@ -10,7 +10,8 @@
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.0/papaparse.min.js"></script>
     <script src="simple_statistics.js"></script>
-
+    <script src="ky-counties.json"></script>
+    
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 
@@ -114,15 +115,15 @@
                 attribute="2001";
         // AJAX requests to load data files
             
-    $.getJSON("us-states.json", function(states) {
+    $.getJSON("ky-counties.json", function(states) {
 
-        Papa.parse('states-unemployment.csv', {
+        Papa.parse('ky-unemployment.csv', {
             download: true,
             header: true,
             complete: function(data) {
                 console.log(data);
                 // data is accessible to us here
-                processData(states, data);
+                processData(counties, data);
 
                 // note that states is also accessible here!
 
@@ -135,31 +136,30 @@
         console.log("Program Failure");
     });
         // function to process/bind data
-    function processData(states, data) {
+    function processData(counties, data) {
 
-       for (var state in states.features) {
+       for (var counties in data.features) {
 
-        var props = states.features[state].properties;
+        var props = counties.features[county].properties;
 
-        console.log(props.StateFP);
-       }
+    }
 
         for(var d in data.data) {
-            if(props.STATEFP == data.data[d].STATE_FIP) {
-              states.features[state].properties = data.data[d]; 
+            if(props.COUNTY == data.data[d].COUNTY_FIP) {
+              counties.features[county].properties = data.data[d]; 
               break;
-            console.log(data.data[d].STATE_FIP);
+            console.log(data.data[d].COUNTY_FIP);
             }
         }
-            console.log(states);
+            console.log(counties);
         
-        drawMap(states);
-        //draw sliderUI();
+        drawMap(counties);
+        draw sliderUI();
     };
 
         // function to draw the map
-        function drawMap(states) {
-            dataLayer=L.geoJson(states)
+        function drawMap(counties) {
+            dataLayer=L.geoJson(counties)
             .addTo(map);
             updateMap();
         }
@@ -195,9 +195,8 @@
                         });
                     }); //changes color back and hides info when mouse leaves polygon
                     console.log(layer.feature);
-                    layer.bindPopup("<b>" + "Sword" +" </b><br>" + attribute + ": ".toLocaleString());
-//                    layer.bindPopup("<b>" + layer.feature.properties["State_Name"] + " </b></br>" + attribute ": " + ((layer.feature.properties[attribute]) * 100).toLocaleString());
-
+                    layer.bindPopup("<b>" + layer.properties ["NAME"] +" </b><br>" + attribute + ": " +    (layer.properties[attribute]).toLocaleString());
+//                  
                 });
                 
                 updateLegend(breaks); //puts legend info in breaks function
@@ -307,7 +306,7 @@
         //updates legend according to user selection
 
         // function to create the range slider
-        /*function sliderUI() {
+        function sliderUI() {
                 Min: 2001;
                 Max: 2013;
                 Value: ;
@@ -345,7 +344,7 @@
         .on('input change', function() {
             attribute = $(this).val();
             updateMap();
-        });*/
+        });
 
     </script>
     
