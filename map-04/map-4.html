@@ -75,6 +75,29 @@
         font-size: 1.1em;
         font-weight: bold;
     }
+        .legend {
+        padding: 6px 8px;
+        font-size: 1em;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+    }
+    .legend h3 {
+        font-size: 1.1em;
+        font-weight: normal;
+        color: #001323;
+        margin: 0;
+    }
+    .legend li {
+        list-style-type: none;
+        height: 22px;
+    }
+    .legend span {
+        width: 20px;
+        height: 20px;
+        float: left;
+        margin-right: 10px;
+    }
     </style>
 </head>
 
@@ -83,14 +106,12 @@
     <div id='map'></div>
     
     <div id="ui-controls">
-        <input type="range" min="2001", max="2013", 
-                value="2001", step="1" class="year-slider"></input>
+        <label><span class="min">2001</span><span class="max">2013</span>
+            <input type="range" min = "2001", max= "2013", 
+                   value = "2001", step= "1", class="year-slider"></input>
+        </label>
+    
     </div>
-     
-    <label><span class="min">2001</span><span class="max">2013</span>
-        <input type="range" min = "2001", max= "2013", 
-               value = "2001", step= "1", class="year-slider"></input>
-    </label>
     
     <script>
         
@@ -98,16 +119,16 @@
         // load map tiles and add to map
           
         var map= L.map("map", {
-            center: [37.8163, -97],
-            zoom: 4,
+            center: [37.5, -85],
+            zoom: 7,
             minZoom: 3,
-            maxZoom: 6,
+            maxZoom: 12,
             dragging: true,
             zoomControl: true
         });
-             var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
 	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-});                         
+        });                         
     map.addLayer(Esri_WorldImagery);
         
         // declare global variables
@@ -115,51 +136,58 @@
                 attribute="2001";
         // AJAX requests to load data files
             
-    $.getJSON("ky-counties.json", function(states) {
+     $.getJSON("ky-counties.json", function(counties) {
 
-        Papa.parse('ky-unemployment.csv', {
+        Papa.parse('ky-unemployment-data.csv', {
             download: true,
             header: true,
             complete: function(data) {
-                console.log(data);
+
                 // data is accessible to us here
-                processData(counties, data);
+                
+                processData(counties,data);
 
                 // note that states is also accessible here!
 
             }
         }); // end of Papa.parse() 
 
-    })
+    })  // end of $.getJSON()
+        
+        
     .fail(function() {
         // the data file failed to load
         console.log("Program Failure");
     });
         // function to process/bind data
     function processData(counties, data) {
-
-       for (var counties in data.features) {
+       for (var county in counties.features) {
 
         var props = counties.features[county].properties;
+          
+            for(var d in data.data) {
 
-    }
+                if(props.COUNTY_FIP == data.data[d].CNTY) {
+                  counties.features[county].properties = data.data[d]; 
+                  break;
 
-        for(var d in data.data) {
-            if(props.COUNTY == data.data[d].COUNTY_FIP) {
-              counties.features[county].properties = data.data[d]; 
-              break;
-            console.log(data.data[d].COUNTY_FIP);
+                }
             }
-        }
-            console.log(counties);
-        
+            
+       }
+        drawLegend();
         drawMap(counties);
-        //draw sliderUI();
+        drawInfo();
+        sliderUI();
+        
     };
 
         // function to draw the map
         function drawMap(counties) {
-            dataLayer=L.geoJson(counties)
+            dataLayer=L.geoJson(counties, {
+                fillOpacity: 1,
+                opacity: 1
+            })
             .addTo(map);
             updateMap();
         }
@@ -171,13 +199,12 @@
                 dataLayer.eachLayer(function (layer) {
 
                     var props = layer.feature.properties;
-
+                  
                     layer.setStyle({
                         fillColor: getColor(props[attribute], breaks)
                     });
                     //sets color based on level of current stat in county
-                    layer.bindPopup("<b>" + props["NAME"] + " County</b></br>" + attribute + ": " +
-                        ((props[attribute]) * 100).toLocaleString()); //creates popup info database 
+                    layer.bindPopup("<b>" + props["NAME"] + " County</b></br>" + attribute + ": " + (props[attribute])); //creates popup info database 
 
 
                     layer.on('mouseover', function () {
@@ -194,16 +221,33 @@
                             fillColor: getColor(props[attribute], breaks)
                         });
                     }); //changes color back and hides info when mouse leaves polygon
-                    console.log(layer.feature);
-                    layer.bindPopup("<b>" + layer.properties ["NAME"] +" </b><br>" + attribute + ": " +    (layer.properties[attribute]).toLocaleString());
-//                  
+                    //console.log(layer.feature);
+                    
+                  
                 });
                 
                 updateLegend(breaks); //puts legend info in breaks function
 
-            } //end drawMap function
+            } //end updateMap function
         
-   
+    function getClassBreaks() {
+
+            var values = []; //open array for values
+
+            dataLayer.eachLayer(function (layer) {
+                var value = layer.feature.properties[attribute];
+                values.push(Number(value));
+            });
+          
+            //creates layer for data
+            var breaks = ss.quantile(values, [0, 0.2, 0.4, 0.6, 0.8, 1]);
+         
+            return breaks;//puts info through getClassBreaks function
+
+        }
+        
+//separates data into different tiers
+        
         function drawInfo() {
 
             var info = L.control({
@@ -227,30 +271,14 @@
 
             var props = layer.feature.properties;
 
-            var html = "<h3>" + props['NAME'] + " County</h3>" +
-                "total # occupied units: <b>" + props["OCCUPIED"] + "</b><br>" +
-                "# owned with mortgage or loan: <b>" + props["OWNED_MORT"] + "</b><br>" +
-                "# owned free and clear: <b>" + props["OWNED_FREE"] + "</b><br>" +
-                "# occupied by renters: <b>" + props["RENTER"] + "</b>"
+            var html = "<h3>" + props['NAME'] + " County</h3>"+ attribute
 
             $(".info").html(html);
         };//changes info when new county selected
         
         // function get the class breaks   
             
-        function getClassBreaks() {
 
-            var values = []; //open array for values
-
-            dataLayer.eachLayer(function (layer) {
-                var value = layer.feature.properties[attribute];
-                values.push(Number(value));
-            });
-            //creates layer for data
-            var breaks = ss.quantile(values, [0, 0.2, 0.4, 0.6, 0.8, 1]);
-            return breaks;//puts info through getClassBreaks function
-
-        }
 //separates data into different tiers
        
         // function to get the color value
@@ -271,7 +299,7 @@
                 
         // function to draw the legend
             
-        function drawLegend(breaks) {
+        function drawLegend() {
 
                 var legend = L.control({
                     position: 'topleft'
@@ -280,13 +308,10 @@
                 legend.onAdd = function (map) {
 
                     var div = L.DomUtil.create('div', 'legend');
-
-                    div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3><ul>";
-
+                                                        
                     return div;
-                    var legend = $('.legend').html("<h3>" + labels[attribute] + "</h3><ul>");
                 };
-
+                    
                 legend.addTo(map);
             }
             //creates legend that classifies differnt tiers of the data
@@ -298,53 +323,51 @@
             for (var i = 0; i < breaks.length - 1; i++) {
                 var color = getColor(breaks[i + 1], breaks);
                 legend.append('<li><span style="background:' + color + '"></span> ' +
-                    (breaks[i] * 100).toLocaleString() + ' &mdash; ' +
-                    (breaks[i + 1] * 100).toLocaleString() + '</li>');
+                    (breaks[i]) + ' &mdash; ' +
+                    (breaks[i + 1]) + '</li>');
             }
             legend.append("</ul>");
         };
         //updates legend according to user selection
 
         // function to create the range slider
-        /*function sliderUI() {
-                Min: 2001;
-                Max: 2013;
-                Value: ;
-                Step: 10;
+        function sliderUI() {
+           var sliderControl = L.control({ position: 'bottomleft'} );
+
+            // when we add this control object to the map
+                sliderControl.onAdd = function(map) {
+
+                // select an existing DOM element with an id of "ui-controls"
+                    var slider = L.DomUtil.get("ui-controls");
+
+                    // when the user clicks on the slider element
+                        L.DomEvent.addListener(slider, 'mousedown', function(e) { 
+
+                        // prevent the click event from bubbling up to the map
+                            L.DomEvent.stopPropagation(e); 
+
+                        });
+
+                // return the slider from the onAdd method
+                return slider;
+                }
+
+
+            // add the control object containing our slider element to the map
+            sliderControl.addTo(map);
+
+                    $(".year-slider")
+                .on('input change', function() {
+                    attribute = $(this).val();
+                    updateMap();
+                });
+
         }
          
             
             // create a Leaflet control object and store a reference to it in a variable
     
-        var sliderControl = L.control({ position: 'bottomleft'} );
-
-    // when we add this control object to the map
-        sliderControl.onAdd = function(map) {
-
-        // select an existing DOM element with an id of "ui-controls"
-            var slider = L.DomUtil.get("ui-controls");
-
-            // when the user clicks on the slider element
-                L.DomEvent.addListener(slider, 'mousedown', function(e) { 
-
-                // prevent the click event from bubbling up to the map
-                    L.DomEvent.stopPropagation(e); 
-
-                });
-
-        // return the slider from the onAdd method
-        return slider;
-        }
-    
-
-    // add the control object containing our slider element to the map
-    sliderControl.addTo(map);
-             
-            $(".year-slider")
-        .on('input change', function() {
-            attribute = $(this).val();
-            updateMap();
-        });*/
+      
 
     </script>
     
