@@ -10,4 +10,16 @@ While you are free to use the example HTML structure and CSS rules for the layou
 * choice of typefaces
 * choice of colors
 
-Submit a URL link to your online portfolio (e.g., http://*username*.github.io) to Canvas by **11am on Thursday, April 16th**. 
+Submit a URL link to your online portfolio (e.g., http://*username*.github.io) to Canvas by **11am on Thursday, April 16th**.
+
+##Rubric##
+
+A functional, working portfolio page, hosted on github.io: 20%
+
+Your own content (titles, screenshots, blurbs, working links): 25%
+
+Design and polish: 15%
+
+Working, finished maps for the three chosen projects: 30%
+
+A placeholder page for the final project (with image and small about section): 10%
