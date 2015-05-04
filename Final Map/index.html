@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Live Action Role Play: Fantasy Made Real</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
+   
+    <script src="larp_listTYPE.js"></script> <!--loads Larp List adjusted database-->
+    <script src="overlap_geojson.js"></script> <!--loads externaly created overlap area-->
+
+     
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+   <link href='http://fonts.googleapis.com/css?family=Cinzel' rel='stylesheet' type='text/css'><!--loads script style-->
+<link href='http://fonts.googleapis.com/css?family=Dancing+Script' rel='stylesheet' type='text/css'><!--loads script style-->
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('elven_scroll.png');/*puts pictur elven scroll in background over color*/ 
+            font-family: 'Cinzel', serif;
+            background-color: #0D0000;/*makes background color black*/ 
+            background-size: 100% 1800px;/*makes width of scroll based on window, sets height*/ 
+            background-position: center;/*centers scroll picture*/ 
+            
+        }
+        /*stylizes background of page*/       
+        header {
+            padding: 6px 10%;
+        }
+        /*set upper limit of page*/
+        h1 {
+            position: absolute;/*puts h1 line on top of page*/ 
+            z-index: 100;
+            top: 235px;/*moves h1 line down page*/ 
+            font-family: 'Dancing Script', cursive;/*sets style of h1 text*/ 
+            display: inline-block; 
+            margin: 0;
+            color: #ea0e3a;/*colors h1 text*/ 
+            font-size: 2em;/*sets font size of h1 line*/ 
+            background: rgba(25,25,25,0.8);
+            border-radius: 5px;
+        }
+        /*stylized and set h1 line*/
+        h2 {
+            position: absolute;/*puts h2 line on top of page*/ 
+            z-index: 100;
+            top: 255px;/*moves h2 line down pagee*/ 
+            font-family: 'Dancing Script', cursive;/*sets style of h2 text*/ 
+            display: inline-block;
+            color: #e60834;/*colors h2 text*/ 
+            font-size: 1.5em;/*sets font size of h2 line*/ 
+            background: rgba(25,25,25,0.8);
+            border-radius: 5px;
+        }
+       /*stylized and set h2 line*/
+        #map {
+            width: 100%;/*sets width of map based on window*/ 
+            height: 540px;/*sets height of map element*/ 
+            top: 225px;/*moves map element down page*/ 
+        }
+        /*creates map dimensions*/
+        footer {
+            padding: 10% 15%;/*sets footer bounds based on window*/ 
+            width: 70%;
+        }
+        /*sets footer limit for page*/
+        p {
+            font-size: 1em;/*sets font size of paragraphs*/ 
+            color: #001323;/*sets color of text for paragraphs*/ 
+        }
+        /*stylizes paragraph*/
+        
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>World of LARP Map</h1> <!--map title line 1-->
+        <h2>Unify the World through Play</h2> <!--map title line 2-->
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p>Map created by Grant List and Jeff Levy</p> <!--map authours-->
+        <p>This map was created to provide easy discovery and access of known Larps around the world.</p><!--reason for map creation-->
+        <p>Live Action Role Play (Larp) is a game in which real people play fantatstical characters in a world of their own making. From knights and swords, to aliens and laser beams, larp allows players to explore their imagination unlike any other form of entertainment. Larp players, or larpers, are immersed in the world and must use their skills and abilities to solve problems and defeat monsters. In boffer type larps this involves the real world physical and or mental capabilities of the players. In pen and paper larp the focus is on role play, and acting out what you want your character to do. These games are organized by local groups of select individuals wishing to play their own game, and/or use a generic ruleset ruleset. This unrestrained creation of individual larps has resulted in division of players amongst larps that are started too close to each other.</p><!--explanation of larp community-->
+        <p>This map will allow you an easy view of the different larps located in a 50 mile radius around a specified location. All you need do is click on the map in your desired location. Here we have two classifications of larps. Boffer larps alow some type of physical contact through either dense foam swords and missiles or airsoft guns. Pen and paper larps focus more on roleplay, and do not use physical force when fighting. The circles are the areas of influence of each larp, with the overlaping areas shown in orange. The list of larps available was gained through Larping.org's Larp List, and shows only those registered on the site. While there are many larps that do not appear on this map, it does hold almost 400 different larps from around the world. If you cannot find one near you, go out and make one yourself.</p><!--explanation of map-->
+    </footer>
+    <script>
+       var map = L.map("map", {
+            center: [15, 24],//centers map element
+            zoom: 2,//sets starting zoom of map
+            minZoom: 1,//sets minimum zoom limit, how far out user can go
+            maxZoom: 20,//sets maximum zoom limit, how far in user can go
+        });//creates map
+        map.doubleClickZoom.disable();//disables double click zoom
+       var HERE_normalDay = L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
+	attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
+	subdomains: '1234',
+	mapID: 'newest',
+	app_id: 'Y8m9dK2brESDPGJPdrvs',
+	app_code: 'dq2MYIvjAotR8tHvY8Q_Dg',
+	base: 'base',
+	maxZoom: 20
+});//map background base layer found in Leaflet library
+        map.addLayer(HERE_normalDay);
+//adds background layer for map to map
+        var data = larp.markers;
+//      creates variable to bring database of larps in, allows the accessing of the markers created on Larp List for every registered larp in the HTML format
+        var parsedData = eval(larp.markers);
+//      creates object that will organize database as an array, converts the database from Larp list into something readable in HTML coding      
+        var larp_pts = [];
+//      opens array for creating larp game objects, this is used to rewrite databse into HTML friendly code
+        for (var i=0; i<parsedData.length; i++){
+//      function to write data into new object, converts Larp List databse values into object array values for HTML
+            var site = {
+                name: parsedData[i][0], //pulls name from database
+                latlong: L.latLng(parsedData[i][1], parsedData[i][2]), //pulls latitude and longitude points
+                theme: parsedData[i][12],//pulls theme
+                larpURL: parsedData[i][3],//pulls link to Larp List web page
+                larpTxt: parsedData[i][5]//pulls popup larp description
+            };//variable for information pulled directly from database
+            if (site.larpTxt.indexOf('boffer') >=0){
+                site.type = 'Boffer'
+                }//if boffer appears in text, makes object type boffer
+            else site.type = 'Pen and Paper';//if boffer does not appear in text object type is made pen and paper
+
+            larp_pts.push(site);//puts all object values into object array, rewrites Larp List Databse into new object array that can be read in HTML code
+        };
+//      
+        var boffCircles = L.layerGroup();//creates circle variable for boffer circles
+        var PnP_Circles = L.layerGroup();//creates circle variable for pen and paper circles
+        
+        for (var i=0; i<larp_pts.length; i++){
+            var siteCircle = L.circle(larp_pts[i].latlong, 48280.3);//creates circles for each object in array
+            siteCircle.bindPopup("<a href='"+larp_pts[i].larpURL+"'>" + larp_pts[i].name + "</a><br>" + "Theme: "+larp_pts[i].theme +"<br>"+"Type: "+ larp_pts[i].type);//pulls values from larp_pts array and created popup
+            if (larp_pts[i].type == 'Boffer'){
+                siteCircle.addTo(boffCircles);}//if type is boffer adds boffer circle to map for object
+                else {
+                    siteCircle.addTo(PnP_Circles);};//if type is not boffer adds pen and paper circle to map 
+
+        };
+        //creates popups and circles for map
+           
+        PnP_Circles.eachLayer(function(layer){
+            layer.setStyle({
+                color: '#1b9e77',
+                fillColor: '#1b9e77'
+            })//color circles
+        });
+        //circle function of pen and paper larps
+        
+        boffCircles.eachLayer(function(layer){
+            layer.setStyle({
+                color: '#7570b3',
+                fillColor: '#7570b3'
+            })//color cirlces//color cirlces
+        });
+        //circle function for boffer larps
+
+        PnP_Circles.addTo(map);//adds cicles to map
+        boffCircles.addTo(map);//add circles to map
+         
+        var danger_zone=L.geoJson(overlap);//creates variable for externaly loaded overlap zones
+        danger_zone.eachLayer(function(layer){
+            layer.setStyle({
+                color: '#d95f02',
+                fillColor: '#d95f02'
+            })//color circles
+        });
+        //creates circle function for externaly loaded overlap zones
+        danger_zone.addTo(map);//adds overlap circles to map
+        
+        var sourceLayers = {
+            "<b style='color:#7570b3'>Boffer Larp</b>": boffCircles,//adds control of boffer circles
+            "<b style='color:#1b9e77'>Pen and Paper Larp</b>": PnP_Circles,//adds control of pen and paper circle
+            "<b style='color:#d95f02'>Overlaping Influence Area</b>": danger_zone//adds control of pen and paper circle
+        }
+        //creates variable for user layer control on variables from above
+        L.control.layers(null, sourceLayers, { collapsed:false }).addTo(map);//adds layer control table to map
+        
+        map.on('click', function(e) {
+        PnP_Circles.eachLayer(function(layer) {
+            var distance = e.latlng.distanceTo(layer.getLatLng())/1000; //creates distance function that calculates 50 miles from the click position
+            if(distance > 80.4672) {
+                layer.setStyle({
+                    stroke: false,
+                    fill: false
+                });//if distance>50 miles pen and paper circles are hidden
+            } else {
+               layer.setStyle({
+                    stroke: true,
+                    fill: true  
+               });// if distance<50miles pen and paper circles are not hidden 
+            } 
+        });
+        boffCircles.eachLayer(function(layer) {
+            var distance = e.latlng.distanceTo(layer.getLatLng())/1000; //creates distance function that calculates 50 miles from the click position
+            if(distance > 80.4672) {
+                layer.setStyle({
+                    stroke: false,
+                    fill: false
+                });//if distance>50 miles boffer circles are hidden  
+            } else {
+               layer.setStyle({
+                    stroke: true,
+                    fill: true  
+               });//if distance>50 miles boffer circles are hidden  
+            } 
+        });
+        danger_zone.eachLayer(function(layer) {
+            layer.setStyle({
+                stroke: false,
+                fill: false
+            });  
+        });//hides overlap layer after click
+    });
+    </script>
+
+</body>
+
+</html>
